@@ -1,0 +1,940 @@
+---
+title: "SAMB + External Partners"
+author: "Patrick Bixler"
+date: "12/10/2020"
+output: html_document
+---
+
+```{r include=FALSE}
+source("utils3.R")
+```
+
+#partners as individuals
+```{r Clean Network Data, include=FALSE}
+
+#edgelist 
+el3<-el3
+e3<-as.matrix(el3)
+e3[,1]=as.character(e3[,1])
+e3[,2]=as.character(e3[,2])
+e3[,3]=as.character(e3[,3])
+e3[,4]=as.character(e3[,4])
+e3[,5]=as.character(e3[,5])
+e3[,6]=as.character(e3[,6])
+e3[,7]=as.character(e3[,7])
+e3[,8]=as.character(e3[,8])
+e3[,9]=as.character(e3[,9])
+e3[,10]=as.character(e3[,10])
+e3[,11]=as.character(e3[,11])
+e3[,11]=as.character(e3[,11])
+
+g3<-graph_from_data_frame(d=el3,directed=TRUE) 
+#Some stats like communities and clusters need undirected graphs. Mode = collapse creates an undirected link between any pair of connected nodes. Here we have also said that the ‘weight’ of the links should be summed, and all other edge attributes ignored and dropped.  
+#g3_un<-as.undirected(g1, mode= "collapse",edge.attr.comb=list(weight="sum", "ignore"))
+
+
+#Create a nodelist for excel use 
+gvis3<-toVisNetworkData(g3)
+nodelist3<-gvis3$nodes
+nodelist3<-nodelist3[,1]
+nodelist3<-as.data.frame(nodelist3)
+names(nodelist3)<-c("name")
+
+#load nonsamb_program
+#nonsamb_programs<-read.csv("nonsamb_program.csv")
+
+attr_nodelist3<-merge(nodelist3,samb_partners,by = "name",all.x = TRUE)
+
+write.csv(attr_nodelist3,file = "Nodelist3.csv")
+
+# Pull the node list with attributes
+input_attributes3<-attr_nodelist3
+
+#Define Attributes
+for (i in 1:vcount(g3))
+{
+V(g3)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3)[i]$name)]
+V(g3)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3)[i]$name)]
+}
+
+#new dataframe and igraph object with only "communicate" strength of ties
+el3$Strength[is.na(el3$Strength)] <- "Communication" #convert "NA" for strength to communicate
+
+el3_communicate<-el3[which(el3$Strength=="Communication"),]
+g3_communicate<-graph_from_data_frame(d=el3_communicate,directed=TRUE) 
+e3_communicate<-as.matrix(el3_communicate)
+
+#new dataframe and igraph object with only "coordinate" strength of ties
+el3_coordinate<-el3[which(el3$Strength=="Coordination"),]
+g3_coordinate<-graph_from_data_frame(d=el3_coordinate,directed=TRUE) 
+e3_coordinate<-as.matrix(el3_coordinate)
+
+#new dataframe and igraph object with only "collaboration" strength of ties
+el3_collaborate<-el3[which(el3$Strength=="Collaboration"),]
+g3_collaborate<-graph_from_data_frame(d=el3_collaborate,directed=TRUE) 
+e3_collaborate<-as.matrix(el3_collaborate)
+
+#new dataframe and igraph of landscape conservation function 
+el3_landscape<-el3[which(el3$Landscape=="1"),]
+e3_landscape<-as.matrix(el3_landscape)
+g3_landscape<-graph_from_data_frame(d=e3_landscape,directed=TRUE) 
+
+#new dataframe and igraph of support function
+el3_science<-el3[which(el3$Science=="1"),]
+e3_science<-as.matrix(el3_science)
+g3_science<-graph_from_data_frame(d=e3_science,directed=TRUE) 
+
+#new dataframe and igraph of permitting function
+el3_permit<-el3[which(el3$Permitting=="1"),]
+e3_permit<-as.matrix(el3_permit)
+g3_permit<-graph_from_data_frame(d=e3_permit,directed=TRUE) 
+
+#new dataframe and igraph of budget and administration function 
+el3_BA<-el3[which(el3$Budget.and.Administration=="1"),]
+e3_BA<-as.matrix(el3_BA)
+g3_BA<-graph_from_data_frame(d=e3_BA,directed=TRUE) 
+
+```
+#Parnters as organizations
+```{r Clean Network Data using orgs as nodes, include=FALSE}
+
+#edgelist 
+el4<-el4
+e4<-as.matrix(el4)
+e4[,1]=as.character(e4[,1])
+e4[,2]=as.character(e4[,2])
+e4[,3]=as.character(e4[,3])
+e4[,4]=as.character(e4[,4])
+e4[,5]=as.character(e4[,5])
+e4[,6]=as.character(e4[,6])
+e4[,7]=as.character(e4[,7])
+e4[,8]=as.character(e4[,8])
+e4[,9]=as.character(e4[,9])
+e4[,10]=as.character(e4[,10])
+e4[,11]=as.character(e4[,11])
+
+
+g4<-graph_from_data_frame(d=el4,directed=TRUE) 
+#Some stats like communities and clusters need undirected graphs. Mode = collapse creates an undirected link between any pair of connected nodes. Here we have also said that the ‘weight’ of the links should be summed, and all other edge attributes ignored and dropped.  
+#g3_un<-as.undirected(g1, mode= "collapse",edge.attr.comb=list(weight="sum", "ignore"))
+
+#only communication with Orgs
+el4$Strength[is.na(el4$Strength)] <- "Communication" #convert "NA" for strength to communicate
+el4_communicate<-el4[which(el4$Strength=="Communication"),]
+g4_communicate<-graph_from_data_frame(d=el4_communicate,directed=TRUE) 
+e4_communicate<-as.matrix(el4_communicate)
+
+#new dataframe and igraph object with only "coordinate" strength of ties
+el4_coordinate<-el4[which(el4$Strength=="Coordination"),]
+g4_coordinate<-graph_from_data_frame(d=el4_coordinate,directed=TRUE) 
+e4_coordinate<-as.matrix(el4_coordinate)
+
+#new dataframe and igraph object with only "collaboration" strength of ties
+el4_collaboration<-el4[which(el4$Strength=="Collaboration"),]
+g4_collaboration<-graph_from_data_frame(d=el4_collaboration,directed=TRUE) 
+e4_collaboration<-as.matrix(el4_collaboration)
+
+#Create a nodelist for excel use 
+gvis4<-toVisNetworkData(g4)
+nodelist4<-gvis4$nodes
+nodelist4<-nodelist4[,1]
+nodelist4<-as.data.frame(nodelist4)
+names(nodelist4)<-c("organization")
+
+attr_nodelist4<-merge(nodelist4,samb_partners2,by = "organization",all.x = TRUE)
+
+
+write.csv(nodelist4,file = "Nodelist4.csv")
+
+# Pull the node list with attributes
+input_attributes4<-nodelist4
+```
+$~$
+
+## Ego-centric Network Measures
+```{r echo=FALSE, warning=FALSE}
+#Degree in 
+
+inDegree3<-igraph::degree(g3,mode="in")
+outDegree3<-igraph::degree(g3,mode="out")
+TotalDegree3<-as.data.frame(igraph::degree(g3))
+betweenness3<-igraph::betweenness(g3, v = V(g3), directed = TRUE, weights = NULL,
+  nobigint = TRUE, normalized = TRUE)
+inCloseness3<-igraph::closeness(g3, vids = V(g3), mode = c("in"),normalized = TRUE)
+outCloseness3<-igraph::closeness(g3, vids = V(g3), mode = c("out"),normalized = TRUE)
+#eigen<-evcent(m1,g=1,gmode = "digraph",rescale=TRUE, ignore.eval=TRUE)
+#removed eigen from this DF_Centrality
+DF_Centrality3<-as.data.frame(cbind(rownames(TotalDegree3),inDegree3,outDegree3,TotalDegree3,betweenness3,inCloseness3,outCloseness3))
+rownames(DF_Centrality3)<-NULL
+DF_Centrality3<-as.data.frame(DF_Centrality3)
+colnames(DF_Centrality3)[1]<-"name"
+colnames(DF_Centrality3)[4]<-"TotalDegree"
+
+
+par(mfcol = c(4,3)) 
+hist(inDegree3)
+hist(outDegree3)
+hist(TotalDegree3)
+hist(betweenness3)
+hist(inCloseness3)
+hist(outCloseness3)
+
+dd.g3<-degree.distribution(g3)
+d3<-1:max(TotalDegree3)-1
+ind<-(dd.g3 != 0)
+plot(d3[ind],dd.g3[ind],log="xy",col="blue",xlab=c("Log-degree"),ylab=c("Log-Intensity"),
+     main="Log-Log Degree Distribution")
+
+samb_partners_centrality<-merge(DF_Centrality3, attr_nodelist3, by = "name")
+write.csv(samb_partners_centrality,file = "SAMB_Partners_Centrality.csv")
+
+input_attributes3<-samb_partners_centrality
+
+#Degree in for org network
+
+inDegree4<-igraph::degree(g4,mode="in")
+outDegree4<-igraph::degree(g4,mode="out")
+TotalDegree4<-as.data.frame(igraph::degree(g4))
+betweenness4<-igraph::betweenness(g4, v = V(g4), directed = TRUE, weights = NULL,
+  nobigint = TRUE, normalized = TRUE)
+inCloseness4<-igraph::closeness(g4, vids = V(g4), mode = c("in"),normalized = TRUE)
+outCloseness4<-igraph::closeness(g4, vids = V(g4), mode = c("out"),normalized = TRUE)
+#eigen<-evcent(m1,g=1,gmode = "digraph",rescale=TRUE, ignore.eval=TRUE)
+#removed eigen from this DF_Centrality
+DF_Centrality4<-as.data.frame(cbind(rownames(TotalDegree4),inDegree4,outDegree4,TotalDegree4,betweenness4,inCloseness4,outCloseness4))
+rownames(DF_Centrality4)<-NULL
+DF_Centrality4<-as.data.frame(DF_Centrality4)
+colnames(DF_Centrality4)[1]<-"organization"
+colnames(DF_Centrality4)[4]<-"TotalDegree"
+
+samb_partners_org_centrality<-left_join(input_attributes4, DF_Centrality4, by = "organization")
+
+write.csv(samb_partners_org_centrality,file = "SAMB_Partners_Org_Centrality.csv")
+
+input_attributes4<-samb_partners_org_centrality
+
+```
+#Partner network geomap
+```{r, data_partner, echo=FALSE, warning=FALSE}
+
+external <- read_csv(
+  "external_network_clean.csv",
+  col_types = cols(
+    `Budget and Administration` = col_skip(),
+    Landscape = col_skip(),
+    Other = col_skip(),
+    `Other Area` = col_skip(),
+    Permitting = col_skip(),
+    Science = col_skip(),
+    city = col_skip(),
+    state = col_skip()
+  )
+)
+
+loc <- read_csv("coordinates2.csv",
+                col_types = cols(X1 = col_skip()))
+
+df <- left_join(external, loc, by = c("ego" = "name"))
+df <- left_join(df, loc, by = c("alter" = "name"))
+
+
+
+
+#Noise was introduced so all the nodes aren't on top of each other
+loc$noiselon <- runif(404, min = -0.0900, max = 0.0900)
+loc$noiselat <- runif(404, min = -0.0900, max = 0.0900)
+loc$lon = loc$lon + loc$noiselon
+loc$lat = loc$lat + loc$noiselat
+
+edges <- df
+edges$Strength_adj[is.na(edges$Strength)] <- 1
+edges$Strength_adj[edges$Strength == "Communication"] <- 1
+edges$Strength_adj[edges$Strength == "Coordination"] <- 1
+edges$Strength_adj[edges$Strength == "Collaboration"] <- 1
+edges$Strength_adj <- as.numeric(edges$Strength_adj)
+edges <- edges[!is.na(edges$Strength), ]
+edges$Strength <- as.factor(edges$Strength)
+
+#This creates an ordered factor.
+edges$Strength <- factor(
+  edges$Strength,
+  levels =
+    c("Communication", "Coordination", "Collaboration"),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+edges$Connection <- "Connection"
+edges$Connection <- factor(
+  edges$Connection,
+  levels =
+    c("Connection"),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+#partner nodes for geomap
+SAMB_Partners_Centrality <-
+  read_csv("SAMB_Partners_Centrality.csv",
+    col_types = cols(
+      X1 = col_skip(),
+      admin = col_skip(),
+      city = col_skip(),
+      conservation_delivery = col_skip(),
+      conservation_planning = col_skip(),
+      email = col_skip(),
+      legacy = col_skip(),
+      regulatory_policy = col_skip(),
+      relationships = col_skip(),
+      research = col_skip(),
+      state = col_skip(),
+      teamlead = col_skip(),
+      technical_species_habitats = col_skip(),
+      title = col_skip()
+    )
+  )
+
+nodes <- left_join(SAMB_Partners_Centrality, loc, by = "name")
+
+nodes$affiliation <- ""
+
+nodes$affiliation[nodes$organization.x == "SAMB"] <- "SAMB"
+nodes$affiliation[nodes$organization.x != "SAMB"] <- "Partner"
+nodes$affiliation <- as.factor(nodes$affiliation)
+nodes$affiliation <- factor(
+  nodes$affiliation,
+  levels =
+    c("Partner", "SAMB"),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+nodes <- nodes[!is.na(nodes$address), ]
+
+nodes$TotalDegree_adj <- nodes$TotalDegree + 10
+
+
+nodes <-
+  nodes %>%  mutate(connection_rank = dense_rank(desc(TotalDegree)))
+
+# map projection
+geo <- list(
+  scope = 'north america',
+  projection = list(type = 'azimuthal equal area'),
+  showland = TRUE,
+  landcolor = toRGB("grey83"),
+  countrycolor = toRGB("white"),
+  subunitcolor = toRGB("white"),
+  showlakes = TRUE,
+  lakecolor = toRGB("white"),
+  showsubunits = TRUE,
+  showcountries = TRUE,
+  resolution = 50
+)
+
+cols <- c("#AA7939", "#343477", "#277553")
+
+#Nodes
+fig <- plot_geo(locationmode = 'USA-states')
+
+
+#Edges
+fig <- fig %>% add_segments(
+  data = edges,
+  x = ~ lon.x,
+  xend = ~ lon.y,
+  y = ~ lat.x,
+  yend = ~ lat.y,
+  alpha = 0.6,
+  hoverinfo = "none",
+  color = ~ Connection,
+  colors = cols
+)
+
+fig <- fig %>% layout(title = 'SAMB Connections to External Partners (Individuals)',
+                      geo = geo,
+                      showlegend = TRUE)
+
+
+fig <- fig %>% add_markers(
+  data = nodes,
+  x = ~ lon,
+  y = ~ lat,
+  text = ~ paste0(
+    name,
+    "<br>",
+    "Connections: ",
+    TotalDegree,
+    "\nConnection Rank: ",
+    connection_rank,
+    "<br>",
+    "City: ",
+    address
+  ),
+  size = ~ TotalDegree_adj ** 2,
+  hoverinfo = "text",
+  alpha = 0.8,
+  color = ~ affiliation,
+  colors = cols
+)
+
+```
+#Visualize All Partner Network - Individuals
+```{r echo=FALSE}
+for (i in 1:vcount(g3))
+{
+V(g3)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3)[i]$name)]
+V(g3)[i]$legacy<-input_attributes3$legacy[which(input_attributes3$name==V(g3)[i]$name)]
+V(g3)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3)[i]$name)]
+V(g3)[i]$size<-input_attributes3$inDegree3[which(input_attributes3$name==V(g3)[i]$name)]
+}
+
+V(g3)$size<-V(g3)$size*5
+
+
+lnodes <- data.frame(label = c("AL","AR", "FL","GA", "KY", "LA","MS", "NC", "PR", "SC", "TN", "Outside SE"),
+  color.background = c("darkred", "gray","darkorange", "red", "blue","yellow","blueviolet","cyan","aquamarine","deeppink","orange", "skyblue"),
+  color.border = c("white","white","white","white","white","white","white","white","white","white", "white", "white"),
+  shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot"))
+
+V(g3)[V(g3)$state=="AL"]$color <- "darkred"
+V(g3)[V(g3)$state=="AR"]$color <- "gray"
+V(g3)[V(g3)$state=="FL"]$color <- "darkorange"
+V(g3)[V(g3)$state=="GA"]$color <- "red"
+V(g3)[V(g3)$state=="KY"]$color <- "blue"
+V(g3)[V(g3)$state=="LA"]$color <- "yellow"
+V(g3)[V(g3)$state=="MS"]$color <- "blueviolet"
+V(g3)[V(g3)$state=="NC"]$color <- "cyan"
+V(g3)[V(g3)$state=="PR"]$color <- "aquamarine"
+V(g3)[V(g3)$state=="SC"]$color <- "deeppink"
+V(g3)[V(g3)$state=="TN"]$color <- "orange"
+
+#define edge attributes
+E(g3)$Strength[E(g3)$Strength == "Communication"] <- 1
+E(g3)$Strength[E(g3)$Strength == "Coordination"] <- 2
+E(g3)$Strength[E(g3)$Strength == "Collaboration"] <-3
+E(g3)$Strength <- as.numeric(E(g3)$Strength)
+
+gvis3<-toVisNetworkData(g3)
+nodelist3<-gvis3$nodes
+gvis3$edges$value<-gvis3$edges$Strength #weights edges by strength of tie
+gvis3$edges$value <-as.numeric(gvis3$edges$value)
+gvis3$edges$value <- gvis3$edges$value/10+1
+gvis3$edges$color <- NULL
+
+
+
+visNetwork(sort(gvis3$nodes),gvis3$edges,main="SAMB Connections to External Partners (Individuals)",width = "100%",height = "850px") %>%
+ visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+
+
+#visualize SAMB ext partners geomap
+```{r, echo=FALSE, warning=FALSE}
+saveWidget(fig,
+           "SAMB_External_Network.html",
+           selfcontained = T,
+           libdir = "lib2")
+
+fig
+```
+
+
+
+#Network with only communication ties to individuals
+```{r SAMB network with external individuals, echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g3_communicate))
+{
+V(g3_communicate)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3_communicate)[i]$name)]
+V(g3_communicate)[i]$legacy<-input_attributes3$legacy[which(input_attributes3$name==V(g3_communicate)[i]$name)]
+V(g3_communicate)[i]$size<-input_attributes3$inDegree3[which(input_attributes3$name==V(g3_communicate)[i]$name)]
+V(g3_communicate)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3_communicate)[i]$name)]
+}
+
+V(g3_communicate)$size<-V(g3_communicate)$size*5
+
+lnodes <- data.frame(label = c("AL","AR", "FL","GA", "KY", "LA","MS", "NC", "PR", "SC", "TN", "Outside SE"),
+  color.background = c("darkred", "gray","darkorange", "red", "blue","yellow","blueviolet","cyan","aquamarine","deeppink","orange", "skyblue"),
+  color.border = c("white","white","white","white","white","white","white","white","white","white", "white", "white"),
+  shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot"))
+
+V(g3_communicate)[V(g3_communicate)$state=="AL"]$color <- "darkred"
+V(g3_communicate)[V(g3_communicate)$state=="AR"]$color <- "gray"
+V(g3_communicate)[V(g3_communicate)$state=="FL"]$color <- "darkorange"
+V(g3_communicate)[V(g3_communicate)$state=="GA"]$color <- "red"
+V(g3_communicate)[V(g3_communicate)$state=="LA"]$color <- "yellow"
+V(g3_communicate)[V(g3_communicate)$state=="KY"]$color <- "blue"
+V(g3_communicate)[V(g3_communicate)$state=="MS"]$color <- "blueviolet"
+V(g3_communicate)[V(g3_communicate)$state=="NC"]$color <- "cyan"
+V(g3_communicate)[V(g3_communicate)$state=="TN"]$color <- "orange"
+V(g3_communicate)[V(g3_communicate)$state=="SC"]$color <- "deeppink"
+V(g3_communicate)[V(g3_communicate)$state=="PR"]$color <- "aquamarine"
+
+
+gvis3_communicate<-toVisNetworkData(g3_communicate)
+nodelist3_communicate<-gvis3_communicate$nodes
+gvis3_communicate$edges$value<-gvis3_communicate$edges$Strength #weights edges by strength of tie
+gvis3_communicate$edges$value <-as.numeric(gvis3_communicate$edges$value)
+gvis3_communicate$edges$value <- gvis3_communicate$edges$value/10+1
+gvis3_communicate$edges$color <- NULL
+
+visNetwork(sort(gvis3_communicate$nodes),gvis3_communicate$edges, main="SAMB + External Partner Communication Network (Individuals)",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#Network with external individuals coordination ties
+```{r echo=FALSE}
+for (i in 1:vcount(g3_coordinate))
+{
+V(g3_coordinate)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3_coordinate)[i]$name)]
+V(g3_coordinate)[i]$legacy<-input_attributes3$legacy[which(input_attributes3$name==V(g3_coordinate)[i]$name)]
+V(g3_coordinate)[i]$size<-input_attributes3$inDegree3[which(input_attributes3$name==V(g3_coordinate)[i]$name)]
+V(g3_coordinate)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3_coordinate)[i]$name)]
+}
+
+V(g3_coordinate)$size<-V(g3_coordinate)$size*5
+
+lnodes <- data.frame(label = c("AL","AR", "FL","GA", "KY", "LA","MS", "NC", "PR", "SC", "TN", "Outside SE"),
+  color.background = c("darkred", "gray","darkorange", "red", "blue","yellow","blueviolet","cyan","aquamarine","deeppink","orange", "skyblue"),
+  color.border = c("white","white","white","white","white","white","white","white","white","white", "white", "white"),
+  shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot"))
+
+V(g3_coordinate)[V(g3_coordinate)$state=="AL"]$color <- "darkred"
+V(g3_coordinate)[V(g3_coordinate)$state=="AR"]$color <- "gray"
+V(g3_coordinate)[V(g3_coordinate)$state=="FL"]$color <- "darkorange"
+V(g3_coordinate)[V(g3_coordinate)$state=="GA"]$color <- "red"
+V(g3_coordinate)[V(g3_coordinate)$state=="LA"]$color <- "yellow"
+V(g3_coordinate)[V(g3_coordinate)$state=="KY"]$color <- "blue"
+V(g3_coordinate)[V(g3_coordinate)$state=="MS"]$color <- "blueviolet"
+V(g3_coordinate)[V(g3_coordinate)$state=="NC"]$color <- "cyan"
+V(g3_coordinate)[V(g3_coordinate)$state=="TN"]$color <- "orange"
+V(g3_coordinate)[V(g3_coordinate)$state=="SC"]$color <- "deeppink"
+V(g3_coordinate)[V(g3_coordinate)$state=="PR"]$color <- "aquamarine"
+
+
+
+gvis3_coordinate<-toVisNetworkData(g3_coordinate)
+nodelist3_coordinate<-gvis3_coordinate$nodes
+
+
+
+visNetwork(sort(gvis3_coordinate$nodes),gvis3_coordinate$edges, main="SAMB + External Partner Coordination Network (Individuals)",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#External partners (individuals) collaboration
+```{r echo=FALSE}
+for (i in 1:vcount(g3_collaborate))
+{
+V(g3_collaborate)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3_collaborate)[i]$name)]
+V(g3_collaborate)[i]$legacy<-input_attributes3$legacy[which(input_attributes3$name==V(g3_collaborate)[i]$name)]
+V(g3_collaborate)[i]$size<-input_attributes3$inDegree3[which(input_attributes3$name==V(g3_collaborate)[i]$name)]
+V(g3_collaborate)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3_collaborate)[i]$name)]
+}
+
+V(g3_collaborate)$size<-V(g3_collaborate)$size*5
+
+lnodes <- data.frame(label = c("AL","AR", "FL","GA", "KY", "LA","MS", "NC", "PR", "SC", "TN", "Outside SE"),
+  color.background = c("darkred", "gray","darkorange", "red", "blue","yellow","blueviolet","cyan","aquamarine","deeppink","orange", "skyblue"),
+  color.border = c("white","white","white","white","white","white","white","white","white","white", "white", "white"),
+  shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot"))
+
+V(g3_collaborate)[V(g3_collaborate)$state=="AL"]$color <- "darkred"
+V(g3_collaborate)[V(g3_collaborate)$state=="AR"]$color <- "gray"
+V(g3_collaborate)[V(g3_collaborate)$state=="FL"]$color <- "darkorange"
+V(g3_collaborate)[V(g3_collaborate)$state=="GA"]$color <- "red"
+V(g3_collaborate)[V(g3_collaborate)$state=="LA"]$color <- "yellow"
+V(g3_collaborate)[V(g3_collaborate)$state=="KY"]$color <- "blue"
+V(g3_collaborate)[V(g3_collaborate)$state=="MS"]$color <- "blueviolet"
+V(g3_collaborate)[V(g3_collaborate)$state=="NC"]$color <- "cyan"
+V(g3_collaborate)[V(g3_collaborate)$state=="TN"]$color <- "orange"
+V(g3_collaborate)[V(g3_collaborate)$state=="SC"]$color <- "deeppink"
+V(g3_collaborate)[V(g3_collaborate)$state=="PR"]$color <- "aquamarine"
+
+gvis3_collaborate<-toVisNetworkData(g3_collaborate)
+nodelist3_collaborate<-gvis3_collaborate$nodes
+
+
+
+visNetwork(sort(gvis3_collaborate$nodes),gvis3_collaborate$edges, main="SAMB + External Partner Collaboration Network (Individuals)",width = "100%",height = "850px") %>%
+ visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+
+#Visualize Landscape Conservation Network 
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g3_landscape))
+{
+V(g3_landscape)[i]$legacy<-input_attributes3$legacy[which(input_attributes3$name==V(g3_landscape)[i]$name)]
+V(g3_landscape)[i]$size<-input_attributes3$inDegree3[which(input_attributes3$name==V(g3_landscape)[i]$name)]
+V(g3_landscape)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3_landscape)[i]$name)]
+V(g3_landscape)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3_landscape)[i]$name)]
+}
+
+V(g3_landscape)$size<-V(g3_landscape)$size*5
+
+lnodes <- data.frame(label = c("AL","AR", "FL","GA", "KY", "LA","MS", "NC", "PR", "SC", "TN", "Outside SE"),
+  color.background = c("darkred", "gray","darkorange", "red", "blue","yellow","blueviolet","cyan","aquamarine","deeppink","orange", "skyblue"),
+  color.border = c("white","white","white","white","white","white","white","white","white","white", "white", "white"),
+  shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot"))
+
+V(g3_landscape)[V(g3_landscape)$state=="AL"]$color <- "darkred"
+V(g3_landscape)[V(g3_landscape)$state=="AR"]$color <- "gray"
+V(g3_landscape)[V(g3_landscape)$state=="FL"]$color <- "darkorange"
+V(g3_landscape)[V(g3_landscape)$state=="GA"]$color <- "red"
+V(g3_landscape)[V(g3_landscape)$state=="LA"]$color <- "yellow"
+V(g3_landscape)[V(g3_landscape)$state=="KY"]$color <- "blue"
+V(g3_landscape)[V(g3_landscape)$state=="MS"]$color <- "blueviolet"
+V(g3_landscape)[V(g3_landscape)$state=="NC"]$color <- "cyan"
+V(g3_landscape)[V(g3_landscape)$state=="TN"]$color <- "orange"
+V(g3_landscape)[V(g3_landscape)$state=="SC"]$color <- "deeppink"
+V(g3_landscape)[V(g3_landscape)$state=="PR"]$color <- "aquamarine"
+
+#define edge attributes
+E(g3_landscape)$Strength[E(g3_landscape)$Strength == "Communication"] <- 1
+E(g3_landscape)$Strength[E(g3_landscape)$Strength == "Coordination"] <- 2
+E(g3_landscape)$Strength[E(g3_landscape)$Strength == "Collaboration"] <-3
+E(g3_landscape)$Strength[is.na(E(g3_landscape)$Strength)] <- 1
+E(g3_landscape)$Strength <- as.numeric(E(g3_landscape)$Strength)
+
+
+gvis3_landscape<-toVisNetworkData(g3_landscape)
+nodelist3_landscape<-gvis3_landscape$nodes
+gvis3_landscape$edges$value<-gvis3_landscape$edges$Strength #weights edges by strength of tie
+gvis3_landscape$edges$value <-as.numeric(gvis3_landscape$edges$value)
+gvis3_landscape$edges$value <- gvis3_landscape$edges$value/10+1
+gvis3_landscape$edges$color <- NULL
+
+
+visNetwork(sort(gvis3_landscape$nodes),gvis3_landscape$edges,main="Landscape Conservation Connections with External Partners (Individuals",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#Science Support
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g3_science))
+{
+V(g3_science)[i]$legacy<-input_attributes3$legacy[which(input_attributes3$name==V(g3_science)[i]$name)]
+V(g3_science)[i]$size<-input_attributes3$inDegree3[which(input_attributes3$name==V(g3_science)[i]$name)]
+V(g3_science)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3_science)[i]$name)]
+V(g3_science)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3_science)[i]$name)]
+}
+
+V(g3_science)$size<-V(g3_science)$size*5
+
+lnodes <- data.frame(label = c("AL","AR", "FL","GA", "KY", "LA","MS", "NC", "PR", "SC", "TN", "Outside SE"),
+  color.background = c("darkred", "gray","darkorange", "red", "blue","yellow","blueviolet","cyan","aquamarine","deeppink","orange", "skyblue"),
+  color.border = c("white","white","white","white","white","white","white","white","white","white", "white", "white"),
+  shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot"))
+
+V(g3_science)[V(g3_science)$state=="AL"]$color <- "darkred"
+V(g3_science)[V(g3_science)$state=="AR"]$color <- "gray"
+V(g3_science)[V(g3_science)$state=="FL"]$color <- "darkorange"
+V(g3_science)[V(g3_science)$state=="GA"]$color <- "red"
+V(g3_science)[V(g3_science)$state=="LA"]$color <- "yellow"
+V(g3_science)[V(g3_science)$state=="KY"]$color <- "blue"
+V(g3_science)[V(g3_science)$state=="MS"]$color <- "blueviolet"
+V(g3_science)[V(g3_science)$state=="NC"]$color <- "cyan"
+V(g3_science)[V(g3_science)$state=="TN"]$color <- "orange"
+V(g3_science)[V(g3_science)$state=="SC"]$color <- "deeppink"
+V(g3_science)[V(g3_science)$state=="PR"]$color <- "aquamarine"
+
+#define edge attributes
+E(g3_science)$Strength[E(g3_science)$Strength == "Communication"] <- 1
+E(g3_science)$Strength[E(g3_science)$Strength == "Coordination"] <- 2
+E(g3_science)$Strength[E(g3_science)$Strength == "Collaboration"] <-3
+E(g3_science)$Strength[is.na(E(g3_science)$Strength)] <- 1
+E(g3_science)$Strength <- as.numeric(E(g3_science)$Strength)
+
+
+gvis3_science<-toVisNetworkData(g3_science)
+nodelist3_science<-gvis3_science$nodes
+gvis3_science$edges$value<-gvis3_science$edges$Strength #weights edges by strength of tie
+gvis3_science$edges$value <-as.numeric(gvis3_science$edges$value)
+gvis3_science$edges$value <- gvis3_science$edges$value/10+1
+gvis3_science$edges$color <- NULL
+
+
+visNetwork(sort(gvis3_science$nodes),gvis3_science$edges,main="Science Support Connections with External Partners (Individuals",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#Permitting
+
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g3_permit))
+{
+V(g3_permit)[i]$legacy<-input_attributes3$legacy[which(input_attributes3$name==V(g3_permit)[i]$name)]
+V(g3_permit)[i]$size<-input_attributes3$inDegree3[which(input_attributes3$name==V(g3_permit)[i]$name)]
+V(g3_permit)[i]$organization<-input_attributes3$organization[which(input_attributes3$name==V(g3_permit)[i]$name)]
+V(g3_permit)[i]$state<-input_attributes3$state[which(input_attributes3$name==V(g3_permit)[i]$name)]
+}
+
+V(g3_permit)$size<-V(g3_permit)$size*5
+
+lnodes <- data.frame(label = c("AL","AR", "FL","GA", "KY", "LA","MS", "NC", "PR", "SC", "TN", "Outside SE"),
+  color.background = c("darkred", "gray","darkorange", "red", "blue","yellow","blueviolet","cyan","aquamarine","deeppink","orange", "skyblue"),
+  color.border = c("white","white","white","white","white","white","white","white","white","white", "white", "white"),
+  shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot"))
+
+V(g3_permit)[V(g3_permit)$state=="AL"]$color <- "darkred"
+V(g3_permit)[V(g3_permit)$state=="AR"]$color <- "gray"
+V(g3_permit)[V(g3_permit)$state=="FL"]$color <- "darkorange"
+V(g3_permit)[V(g3_permit)$state=="GA"]$color <- "red"
+V(g3_permit)[V(g3_permit)$state=="LA"]$color <- "yellow"
+V(g3_permit)[V(g3_permit)$state=="KY"]$color <- "blue"
+V(g3_permit)[V(g3_permit)$state=="MS"]$color <- "blueviolet"
+V(g3_permit)[V(g3_permit)$state=="NC"]$color <- "cyan"
+V(g3_permit)[V(g3_permit)$state=="TN"]$color <- "orange"
+V(g3_permit)[V(g3_permit)$state=="SC"]$color <- "deeppink"
+V(g3_permit)[V(g3_permit)$state=="PR"]$color <- "aquamarine"
+
+#define edge attributes
+E(g3_permit)$Strength[E(g3_permit)$Strength == "Communication"] <- 1
+E(g3_permit)$Strength[E(g3_permit)$Strength == "Coordination"] <- 2
+E(g3_permit)$Strength[E(g3_permit)$Strength == "Collaboration"] <-3
+E(g3_permit)$Strength[is.na(E(g3_permit)$Strength)] <- 1
+E(g3_permit)$Strength <- as.numeric(E(g3_permit)$Strength)
+
+
+gvis3_permit<-toVisNetworkData(g3_permit)
+nodelist3_permit<-gvis3_permit$nodes
+gvis3_permit$edges$value<-gvis3_permit$edges$Strength #weights edges by strength of tie
+gvis3_permit$edges$value <-as.numeric(gvis3_permit$edges$value)
+gvis3_permit$edges$value <- gvis3_permit$edges$value/10+1
+gvis3_permit$edges$color <- NULL
+
+
+visNetwork(sort(gvis3_permit$nodes),gvis3_permit$edges,main="Permitting Connections with External Partners (Individuals",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+
+#SAMB external parnters by org
+```{r echo=FALSE}
+for (i in 1:vcount(g4))
+{
+V(g4)[i]$organization<-input_attributes4$organization[which(input_attributes4$organization==V(g4)[i]$name)]
+V(g4)[i]$size<-input_attributes4$inDegree4[which(input_attributes4$organization==V(g4)[i]$name)]
+}
+
+V(g4)$shape <-"square"
+V(g4)$size<-V(g4)$size*5
+
+#define edge attributes
+E(g4)$Strength[E(g4)$Strength == "Communication"] <- 1
+E(g4)$Strength[E(g4)$Strength == "Coordination"] <- 2
+E(g4)$Strength[E(g4)$Strength == "Collaboration"] <-3
+E(g4)$Strength <- as.numeric(E(g4)$Strength)
+
+gvis4<-toVisNetworkData(g4)
+nodelist4<-gvis4$nodes
+gvis4$edges$value<-gvis4$edges$Strength #weights edges by strength of tie
+gvis4$edges$value <-as.numeric(gvis4$edges$value)
+gvis4$edges$value <- gvis4$edges$value/10+1
+gvis4$edges$color <- NULL
+
+
+visNetwork(sort(gvis4$nodes),gvis4$edges,main="SAMB Connections to External Partners (Organizations)",width = "100%",height = "850px") %>%
+ visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_nicely") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("organization"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+    addFontAwesome() %>%
+  visLegend(position = "left",useGroups = FALSE,stepY=100)
+```
+
+```{r network summary, include = FALSE, echo=FALSE, warning=FALSE}
+E(g3)
+table(E(g3)$Strength)
+V(g3)
+table(V(g3)$organization)
+
+E(g3_communicate)
+table(E(g3_communicate)$Strength)
+V(g3_communicate)
+table(V(g3_communicate)$organization)
+
+E(g3_coordinate)
+table(E(g3_coordinate)$Strength)
+V(g3_coordinate)
+table(V(g3_coordinate)$organization)
+
+E(g3_collaborate)
+table(E(g3_collaborate)$Strength)
+V(g3_collaborate)
+table(V(g3_collaborate)$organization)
+
+E(g3_landscape)
+table(E(g3_landscape)$Strength)
+V(g3_landscape)
+table(V(g3_landscape)$organization)
+
+E(g3_science)
+table(E(g3_science)$Strength)
+V(g3_science)
+table(V(g3_science)$organization)
+
+E(g3_permit)
+table(E(g3_permit)$Strength)
+V(g3_permit)
+table(V(g3_permit)$organization)
+
+E(g3_BA)
+table(E(g3_BA)$Strength)
+V(g3_BA)
+table(V(g3_BA)$organization)
+
+describe(outDegree2)
+hist(outDegree2[outDegree2>0], 
+     xlim=c(1,15), 
+     ylim=c(0,10),
+     breaks=15,
+     main="Histogram of SA-MB staff 
+     connections to USFWS Partners",
+     xlab="Number of Partners",
+     border="Chocolate",
+     col="violet")
+
+hist(outDegree3[outDegree3>0], 
+     xlim=c(1,15), 
+     ylim=c(0,20),
+     breaks=15,
+     main="Histogram of SA-MB staff connections to 
+     External Partner Individuals",
+     xlab="Number of Partners",
+     border="Chocolate",
+     col="violet")
+
+hist(outDegree4[outDegree4>0], 
+     xlim=c(1,15), 
+     ylim=c(0,20),
+     breaks=15,
+     main="Histogram of SA-MB staff connections 
+     to External Partner Organizations",
+     xlab="Number of Partners",
+     border="Chocolate",
+     col="violet")
+
+
+hist(inDegree2[inDegree2>0], 
+     xlim=c(1,10), 
+     ylim=c(0,150),
+     breaks = seq(1,11,by=1),
+     main="Histogram of USFWS Partner
+Connections to SA-MB Staff",
+     xlab="Number of SA-MB Partners",
+     border="violet",
+     col="Chocolate")
+
+hist(inDegree3[inDegree3>0], 
+     xlim=c(1,11), 
+     ylim=c(0,286),
+     breaks = seq(1,11,by=1),
+     main="Histogram of External Partner (Individuals)
+Connections to SA-MB Staff",
+     xlab="Number of SA-MB Partners",
+     border="violet",
+     col="Chocolate")
+
+hist(inDegree4[inDegree4>0], 
+     xlim=c(1,25), 
+     ylim=c(0,80),
+     breaks=seq(1,26,by=1),
+     main="Histogram of External Partner Organizations
+Connections to SA-MB Staff",
+     xlab="Number of SA-MB Partners",
+     border="violet",
+     col="Chocolate")
+
+```

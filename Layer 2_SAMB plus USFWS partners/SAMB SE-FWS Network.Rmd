@@ -1,0 +1,844 @@
+---
+title: "SAMB-SE FWS Network"
+author: "Patrick Bixler"
+date: "12/10/2020"
+output: html_document
+---
+
+```{r include=FALSE}
+source("utils2.R")
+```
+
+```{r Clean Network Data, include=FALSE}
+
+#edgelist 
+el2<-el2
+e2<-as.matrix(el2)
+e2[,1]=as.character(e2[,1])
+e2[,2]=as.character(e2[,2])
+e2[,3]=as.character(e2[,3])
+e2[,4]=as.character(e2[,4])
+e2[,5]=as.character(e2[,5])
+e2[,6]=as.character(e2[,6])
+e2[,7]=as.character(e2[,7])
+e2[,8]=as.character(e2[,8])
+e2[,9]=as.character(e2[,9])
+e2[,10]=as.character(e2[,10])
+
+
+g2<-graph_from_data_frame(d=el2,directed=TRUE) 
+#Some stats like communities and clusters need undirected graphs. Mode = collapse creates an undirected link between any pair of connected nodes. 
+#g2<-as.undirected(g2, mode= "collapse")
+
+#Create a nodelist for excel use 
+gvis2<-toVisNetworkData(g2)
+nodelist2<-gvis2$nodes
+nodelist2<-nodelist2[,1]
+nodelist2<-as.data.frame(nodelist2)
+names(nodelist2)<-c("name")
+
+#load nonsamb_program
+#nonsamb_programs<-read.csv("nonsamb_program.csv")
+
+attr_nodelist2<-merge(nodelist2,samb_usfws_3,by = "name",all.x = TRUE)
+
+write.csv(attr_nodelist2,file = "Nodelist2.csv")
+
+# Pull the node list with attributes
+input_attributes2<-attr_nodelist2
+
+#Define Attributes
+for (i in 1:vcount(g2))
+{
+V(g2)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2)[i]$name)]
+V(g2)[i]$type<-input_attributes2$program[which(input_attributes2$name==V(g2)[i]$name)]
+}
+
+#new dataframe and igraph object with only "communicate" strength of ties
+el2$Strength[is.na(el2$Strength)] <- "Communication" #convert "NA" for strength to communicate
+el2_communicate<-el2[which(el2$Strength=="Communication"),]
+g2_communicate<-graph_from_data_frame(d=el2_communicate,directed=TRUE) 
+e2_communicate<-as.matrix(el2_communicate)
+
+#new dataframe and igraph object with only "coordinate" strength of ties
+el2_coordinate<-el2[which(el2$Strength=="Coordination"),]
+g2_coordinate<-graph_from_data_frame(d=el2_coordinate,directed=TRUE) 
+e2_coordinate<-as.matrix(el2_coordinate)
+
+#new dataframe and igraph object with only "collaboration" strength of ties
+el2_collaboration<-el2[which(el2$Strength=="Collaboration"),]
+g2_collaboration<-graph_from_data_frame(d=el2_collaboration,directed=TRUE) 
+e2_collaboration<-as.matrix(el2_collaboration)
+
+#new dataframe and igraph object for landscape conservation function
+el2_landscape<-el2[which(el2$Landscape=="1"),]
+e2_landscape<-as.matrix(el2_landscape)
+g2_landscape<-graph_from_data_frame(d=e2_landscape,directed=TRUE) 
+
+#new dataframe and igraph object for science function
+el2_science<-el2[which(el2$Science=="1"),]
+e2_science<-as.matrix(el2_science)
+g2_science<-graph_from_data_frame(d=e2_science,directed=TRUE) 
+
+#new dataframe and igraph object for permitting function
+el2_permit<-el2[which(el2$Permitting=="1"),]
+e2_permit<-as.matrix(el2_permit)
+g2_permit<-graph_from_data_frame(d=e2_permit,directed=TRUE) 
+
+#new dataframe and igraph object for budget and administration function
+el2_BA<-el2[which(el2$Budget.and.Administration=="1"),]
+e2_BA<-as.matrix(el2_BA)
+g2_BA<-graph_from_data_frame(d=e2_BA,directed=TRUE) 
+
+```
+
+$~$
+
+## Ego-centric Network Measures
+```{r echo=FALSE}
+#Degree in 
+
+inDegree2<-igraph::degree(g2,mode="in")
+outDegree2<-igraph::degree(g2,mode="out")
+TotalDegree2<-as.data.frame(igraph::degree(g2))
+betweenness2<-igraph::betweenness(g2, v = V(g2), directed = TRUE, weights = NULL,
+  nobigint = TRUE, normalized = TRUE)
+inCloseness2<-igraph::closeness(g2, vids = V(g2), mode = c("in"),normalized = TRUE)
+outCloseness2<-igraph::closeness(g2, vids = V(g2), mode = c("out"),normalized = TRUE)
+#eigen<-evcent(m1,g=1,gmode = "digraph",rescale=TRUE, ignore.eval=TRUE)
+#removed eigen from this DF_Centrality
+DF_Centrality2<-as.data.frame(cbind(rownames(TotalDegree2),inDegree2,outDegree2,TotalDegree2,betweenness2,inCloseness2,outCloseness2))
+rownames(DF_Centrality2)<-NULL
+DF_Centrality2<-as.data.frame(DF_Centrality2)
+colnames(DF_Centrality2)[1]<-"name"
+colnames(DF_Centrality2)[4]<-"TotalDegree"
+
+
+par(mfcol = c(4,3)) 
+hist(inDegree2)
+hist(outDegree2)
+hist(TotalDegree2)
+hist(betweenness2)
+hist(inCloseness2)
+hist(outCloseness2)
+
+dd.g2<-degree.distribution(g2)
+d2<-1:max(TotalDegree2)-1
+ind<-(dd.g2 != 0)
+plot(d2[ind],dd.g2[ind],log="xy",col="blue",xlab=c("Log-degree"),ylab=c("Log-Intensity"),
+     main="Log-Log Degree Distribution")
+
+samb_usfws_centrality<-merge(DF_Centrality2, attr_nodelist2, by = "name")
+write.csv(samb_usfws_centrality,file = "SAMB_USFWS_Centrality.csv")
+
+input_attributes2<-samb_usfws_centrality
+
+```
+#geomap code 
+```{r echo=FALSE, warning=FALSE}
+raw2 <-
+  read_csv("USFWS_network_in region.csv",
+    col_types = cols(
+      `Budget and Administration` = col_skip(),
+      Landscape = col_skip(),
+      Other = col_skip(),
+      `Other Area` = col_skip(),
+      Permitting = col_skip(),
+      Science = col_skip(),
+      X1 = col_skip()
+    )
+  )
+
+loc <- read_csv("coordinates_USFWS.csv",
+                col_types = cols(X1 = col_skip()))
+
+#Noise was introduced so all the nodes aren't on top of each other
+loc$noiselon <- runif(288, min = -0.0090, max = 0.0090)
+loc$noiselat <- runif(288, min = -0.0090, max = 0.0090)
+loc$lon = loc$lon + loc$noiselon
+loc$lat = loc$lat + loc$noiselat
+
+
+#edges
+df <- left_join(raw2,loc, by = c("Ego" = "name"))
+df <- left_join(df, loc, by = c("Alter" = "name"))
+
+edges <- df
+edges <- edges[!is.na(edges$Strength), ]
+edges$Strength <- as.factor(edges$Strength)
+
+#This creates an ordered factor.
+edges$Strength <- factor(
+  edges$Strength,
+  levels =
+    c("Communication", "Coordination", "Collaboration"),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+edges$Connection <- "Connection"
+edges$Connection <- factor(
+  edges$Connection,
+  levels =
+    c("Connection"),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+SAMB_USFWS_Centrality <-
+  read_csv("SAMB_USFWS_Centrality.csv",
+    col_types = cols(X1 = col_skip(), title = col_skip())
+  )
+
+#nodes
+nodes <- left_join(SAMB_USFWS_Centrality, loc, by = "name")
+
+
+
+nodes$program.x[nodes$program.x == "Information Resources and Technology Management (IRTM)"] <- "IRTM"
+nodes$program.x <- as.factor(nodes$program.x)
+nodes$program.x <- factor(
+  nodes$program.x,
+  levels =
+    c(
+      "Wildlife and Sport Fish Restoration",
+      "SAMB",
+      "Regional Director's Office",
+      "National Wildlife Refuge System",
+      "Migratory Birds",
+      "Law Enforcement",
+      "Joint Administrative Operations",
+      "IRTM",
+      "Gulf Restoration",
+      "Fisheries and Aquatic Conservation",
+      "External Affairs",
+      "Ecological Services"
+      
+    ),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+nodes <- nodes[!is.na(nodes$address),]
+
+nodes$TotalDegree_adj <- nodes$TotalDegree + 10
+
+
+nodes <-
+  nodes %>%  mutate(connection_rank = dense_rank(desc(TotalDegree)))
+
+
+# map projection
+geo <- list(
+  scope = 'north america',
+  projection = list(type = 'azimuthal equal area'),
+  showland = TRUE,
+  landcolor = toRGB("grey83"),
+  countrycolor = toRGB("white"),
+  subunitcolor = toRGB("white"),
+  showlakes = TRUE,
+  lakecolor = toRGB("white"),
+  showsubunits = TRUE,
+  showcountries = TRUE,
+  resolution = 50
+)
+
+
+t <- list(
+  family = "roboto",
+  size = 20,
+  color = 'black')
+
+
+cols <-
+  c(
+    "black", 
+    "darkblue",
+    "skyblue",
+    "cornsilk",
+    "purple",
+    "darkgreen",  
+    "gray", 
+    "gold",
+    "yellow",
+    "red", 
+    "orange",
+    "darkred", 
+    "green" 
+  )
+
+
+#Nodes
+fig <- plot_geo(locationmode = 'USA-states')
+
+
+#Edges
+fig <- fig %>% add_segments(
+  data = edges,
+  x = ~ lon.x,
+  xend = ~ lon.y,
+  y = ~ lat.x,
+  yend = ~ lat.y,
+  alpha = 0.6,
+  hoverinfo = "none",
+  color = ~ Connection,
+  colors = cols
+)
+
+fig <- fig %>% layout(title = 'SAMB USFWS Network',
+                      geo = geo,
+                      font = t,
+                      margin = list(l=50, r=50, b=50, t=50, pad=4),
+                      showlegend = TRUE)
+
+
+fig <- fig %>% add_markers(
+  data = nodes,
+  x = ~ lon,
+  y = ~ lat,
+  text = ~ paste0(
+    name,
+    "<br>",
+    "Program: ",
+    program.x,
+    "<br>",
+    "Connections: ",
+    TotalDegree,
+    "\nConnection Rank: ",
+    connection_rank,
+    "<br>",
+    "City: ",
+    address
+  ),
+  size = ~ TotalDegree_adj ** 2,
+  hoverinfo = "text",
+  alpha = 0.8,
+  color = ~ program.x,
+  colors = cols
+)
+
+```
+## Network Graphs
+
+
+#All relationships
+```{r echo=FALSE}
+
+#node attributes
+for (i in 1:vcount(g2))
+{
+V(g2)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2)[i]$name)]
+V(g2)[i]$legacy<-input_attributes2$legacy[which(input_attributes2$name==V(g2)[i]$name)]
+V(g2)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2)[i]$name)]
+}
+
+V(g2)$size<-V(g2)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2)[V(g2)$program=="Ecological Services"]$color <-"green"
+V(g2)[V(g2)$program=="External Affairs"]$color <- "darkred"
+V(g2)[V(g2)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2)[V(g2)$program=="Gulf Restoration"]$color <- "red"
+V(g2)[V(g2)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2)[V(g2)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2)[V(g2)$program=="Law Enforcement"]$color <- "gray"
+V(g2)[V(g2)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2)[V(g2)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2)[V(g2)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2)[V(g2)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2)[V(g2)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2)[V(g2)$program=="SAMB"]$color <- "skyblue"
+
+#define edge attributes
+E(g2)$Strength[E(g2)$Strength == "Communication"] <- 1
+E(g2)$Strength[E(g2)$Strength == "Coordination"] <- 2
+E(g2)$Strength[E(g2)$Strength == "Collaboration"] <-3
+E(g2)$Strength <- as.numeric(E(g2)$Strength)
+
+
+
+gvis2<-toVisNetworkData(g2)
+nodelist2<-gvis2$nodes
+visNetwork(sort(gvis2$nodes),gvis2$edges,main="All Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Programs Group Together
+```{r echo=FALSE}
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2)$size<-V(g2)$size*5
+
+gvis2<-toVisNetworkData(g2)
+nodelist2<-gvis2$nodes
+visNetwork(sort(gvis2$nodes),gvis2$edges,main="All Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 15) %>%
+  visEdges(arrows = 'to', smooth =T)  %>% 
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE) %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  visClusteringByColor(colors = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue")) %>%
+addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#Network with only communication ties
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g2_communicate))
+{
+V(g2_communicate)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2_communicate)[i]$name)]
+V(g2_communicate)[i]$legacy<-input_attributes2$legacy[which(input_attributes2$name==V(g2_communicate)[i]$name)]
+V(g2_communicate)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2_communicate)[i]$name)]
+}
+
+V(g2_communicate)$size<-V(g2_communicate)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2_communicate)[V(g2_communicate)$program=="Ecological Services"]$color <-"green"
+V(g2_communicate)[V(g2_communicate)$program=="External Affairs"]$color <- "darkred"
+V(g2_communicate)[V(g2_communicate)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2_communicate)[V(g2_communicate)$program=="Gulf Restoration"]$color <- "red"
+V(g2_communicate)[V(g2_communicate)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2_communicate)[V(g2_communicate)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2_communicate)[V(g2_communicate)$program=="Law Enforcement"]$color <- "gray"
+V(g2_communicate)[V(g2_communicate)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2_communicate)[V(g2_communicate)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2_communicate)[V(g2_communicate)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2_communicate)[V(g2_communicate)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2_communicate)[V(g2_communicate)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2_communicate)[V(g2_communicate)$legacy=="MB"]$color <- "green"
+V(g2_communicate)[V(g2_communicate)$legacy=="SA"]$color <- "red"
+
+
+gvis2_communicate<-toVisNetworkData(g2_communicate)
+nodelist2_communicate<-gvis2_communicate$nodes
+visNetwork(sort(gvis2_communicate$nodes),gvis2_communicate$edges, main="SAMB + USFWS Communication Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left", addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Network with only coordination ties
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g2_coordinate))
+{
+V(g2_coordinate)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2_coordinate)[i]$name)]
+V(g2_coordinate)[i]$legacy<-input_attributes2$legacy[which(input_attributes2$name==V(g2_coordinate)[i]$name)]
+V(g2_coordinate)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2_coordinate)[i]$name)]
+}
+
+V(g2_coordinate)$size<-V(g2_coordinate)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2_coordinate)[V(g2_coordinate)$program=="Ecological Services"]$color <-"green"
+V(g2_coordinate)[V(g2_coordinate)$program=="External Affairs"]$color <- "darkred"
+V(g2_coordinate)[V(g2_coordinate)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2_coordinate)[V(g2_coordinate)$program=="Gulf Restoration"]$color <- "red"
+V(g2_coordinate)[V(g2_coordinate)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2_coordinate)[V(g2_coordinate)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2_coordinate)[V(g2_coordinate)$program=="Law Enforcement"]$color <- "gray"
+V(g2_coordinate)[V(g2_coordinate)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2_coordinate)[V(g2_coordinate)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2_coordinate)[V(g2_coordinate)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2_coordinate)[V(g2_coordinate)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2_coordinate)[V(g2_coordinate)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2_coordinate)[V(g2_coordinate)$legacy=="MB"]$color <- "green"
+V(g2_coordinate)[V(g2_coordinate)$legacy=="SA"]$color <- "red"
+
+
+
+gvis2_coordinate<-toVisNetworkData(g2_coordinate)
+nodelist2_coordinate<-gvis2_coordinate$nodes
+visNetwork(sort(gvis2_coordinate$nodes),gvis2_coordinate$edges, main="SAMB + USFWS Coordination Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left", addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Network with only collaboration ties
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g2_collaboration))
+{
+V(g2_collaboration)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2_collaboration)[i]$name)]
+V(g2_collaboration)[i]$legacy<-input_attributes2$legacy[which(input_attributes2$name==V(g2_collaboration)[i]$name)]
+V(g2_collaboration)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2_collaboration)[i]$name)]
+}
+
+V(g2_collaboration)$size<-V(g2_collaboration)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2_collaboration)[V(g2_collaboration)$program=="Ecological Services"]$color <-"green"
+V(g2_collaboration)[V(g2_collaboration)$program=="External Affairs"]$color <- "darkred"
+V(g2_collaboration)[V(g2_collaboration)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2_collaboration)[V(g2_collaboration)$program=="Gulf Restoration"]$color <- "red"
+V(g2_collaboration)[V(g2_collaboration)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2_collaboration)[V(g2_collaboration)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2_collaboration)[V(g2_collaboration)$program=="Law Enforcement"]$color <- "gray"
+V(g2_collaboration)[V(g2_collaboration)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2_collaboration)[V(g2_collaboration)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2_collaboration)[V(g2_collaboration)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2_collaboration)[V(g2_collaboration)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2_collaboration)[V(g2_collaboration)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2_collaboration)[V(g2_collaboration)$legacy=="MB"]$color <- "green"
+V(g2_collaboration)[V(g2_collaboration)$legacy=="SA"]$color <- "red"
+
+
+
+gvis2_collaboration<-toVisNetworkData(g2_collaboration)
+nodelist2_collaboration<-gvis2_collaboration$nodes
+visNetwork(sort(gvis2_collaboration$nodes),gvis2_collaboration$edges, main="SAMB + USFWS Collaboration Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#SAMB plus USFWS partners geomap
+```{r, echo=FALSE, warning=FALSE}
+saveWidget(fig,
+            "SAMB_USFWS_Network.html",
+            selfcontained = T,
+            libdir = "lib3")
+
+fig
+```
+
+#Landscape Conservation
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g2_landscape))
+{
+V(g2_landscape)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2_landscape)[i]$name)]
+V(g2_landscape)[i]$legacy<-input_attributes2$legacy[which(input_attributes2$name==V(g2_landscape)[i]$name)]
+V(g2_landscape)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2_landscape)[i]$name)]
+}
+
+V(g2_landscape)$size<-V(g2_landscape)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2_landscape)[V(g2_landscape)$program=="Ecological Services"]$color <-"green"
+V(g2_landscape)[V(g2_landscape)$program=="External Affairs"]$color <- "darkred"
+V(g2_landscape)[V(g2_landscape)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2_landscape)[V(g2_landscape)$program=="Gulf Restoration"]$color <- "red"
+V(g2_landscape)[V(g2_landscape)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2_landscape)[V(g2_landscape)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2_landscape)[V(g2_landscape)$program=="Law Enforcement"]$color <- "gray"
+V(g2_landscape)[V(g2_landscape)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2_landscape)[V(g2_landscape)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2_landscape)[V(g2_landscape)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2_landscape)[V(g2_landscape)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2_landscape)[V(g2_landscape)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2_landscape)[V(g2_landscape)$legacy=="MB"]$color <- "green"
+V(g2_landscape)[V(g2_landscape)$legacy=="SA"]$color <- "red"
+
+#define edge attributes
+E(g2_landscape)$Strength[E(g2_landscape)$Strength == "Communication"] <- 1
+E(g2_landscape)$Strength[E(g2_landscape)$Strength == "Coordination"] <- 2
+E(g2_landscape)$Strength[E(g2_landscape)$Strength == "Collaboration"] <-3
+E(g2_landscape)$Strength[is.na(E(g2_landscape)$Strength)] <- 1
+E(g2_landscape)$Strength <- as.numeric(E(g2_landscape)$Strength)
+
+
+gvis2_landscape<-toVisNetworkData(g2_landscape)
+nodelist2_landscape<-gvis2_landscape$nodes
+gvis2_landscape$edges$value<-gvis2_landscape$edges$Strength #weights edges by strength of tie
+gvis2_landscape$edges$value <-as.numeric(gvis2_landscape$edges$value)
+gvis2_landscape$edges$value <- gvis2_landscape$edges$value/10+1
+gvis2_landscape$edges$color <- NULL
+
+
+
+visNetwork(sort(gvis2_landscape$nodes),gvis2_landscape$edges,main="Landscape Conservation Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Science Support
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g2_science))
+{
+V(g2_science)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2_science)[i]$name)]
+V(g2_science)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2_science)[i]$name)]
+}
+
+V(g2_science)$size<-V(g2_science)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2_science)[V(g2_science)$program=="Ecological Services"]$color <-"green"
+V(g2_science)[V(g2_science)$program=="External Affairs"]$color <- "darkred"
+V(g2_science)[V(g2_science)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2_science)[V(g2_science)$program=="Gulf Restoration"]$color <- "red"
+V(g2_science)[V(g2_science)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2_science)[V(g2_science)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2_science)[V(g2_science)$program=="Law Enforcement"]$color <- "gray"
+V(g2_science)[V(g2_science)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2_science)[V(g2_science)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2_science)[V(g2_science)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2_science)[V(g2_science)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2_science)[V(g2_science)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2_science)[V(g2_science)$legacy=="MB"]$color <- "green"
+V(g2_science)[V(g2_science)$legacy=="SA"]$color <- "red"
+
+#define edge attributes
+E(g2_science)$Strength[E(g2_science)$Strength == "Communication"] <- 1
+E(g2_science)$Strength[E(g2_science)$Strength == "Coordination"] <- 2
+E(g2_science)$Strength[E(g2_science)$Strength == "Collaboration"] <-3
+E(g2_science)$Strength[is.na(E(g2_science)$Strength)] <- 1
+E(g2_science)$Strength <- as.numeric(E(g2_science)$Strength)
+
+
+gvis2_science<-toVisNetworkData(g2_science)
+nodelist2_science<-gvis2_science$nodes
+gvis2_science$edges$value<-gvis2_science$edges$Strength #weights edges by strength of tie
+gvis2_science$edges$value <-as.numeric(gvis2_science$edges$value)
+gvis2_science$edges$color <- NULL
+
+visNetwork(sort(gvis2_science$nodes),gvis2_science$edges,main="Science Support Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Permitting
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g2_permit))
+{
+V(g2_permit)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2_permit)[i]$name)]
+V(g2_permit)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2_permit)[i]$name)]
+}
+
+V(g2_permit)$size<-V(g2_permit)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+
+V(g2_permit)[V(g2_permit)$program=="Ecological Services"]$color <-"green"
+V(g2_permit)[V(g2_permit)$program=="External Affairs"]$color <- "darkred"
+V(g2_permit)[V(g2_permit)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2_permit)[V(g2_permit)$program=="Gulf Restoration"]$color <- "red"
+V(g2_permit)[V(g2_permit)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2_permit)[V(g2_permit)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2_permit)[V(g2_permit)$program=="Law Enforcement"]$color <- "gray"
+V(g2_permit)[V(g2_permit)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2_permit)[V(g2_permit)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2_permit)[V(g2_permit)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2_permit)[V(g2_permit)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2_permit)[V(g2_permit)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2_permit)[V(g2_permit)$legacy=="MB"]$color <- "green"
+V(g2_permit)[V(g2_permit)$legacy=="SA"]$color <- "red"
+
+#define edge attributes
+E(g2_permit)$Strength[E(g2_permit)$Strength == "Communication"] <- 1
+E(g2_permit)$Strength[E(g2_permit)$Strength == "Coordination"] <- 2
+E(g2_permit)$Strength[E(g2_permit)$Strength == "Collaboration"] <-3
+E(g2_permit)$Strength[is.na(E(g2_permit)$Strength)] <- 1
+E(g2_permit)$Strength <- as.numeric(E(g2_permit)$Strength)
+
+
+gvis2_permit<-toVisNetworkData(g2_permit)
+nodelist2_permit<-gvis2_permit$nodes
+gvis2_permit$edges$value<-gvis2_permit$edges$Strength #weights edges by strength of tie
+gvis2_permit$edges$value <-as.numeric(gvis2_permit$edges$value)
+gvis2_permit$edges$color <- NULL
+
+
+visNetwork(sort(gvis2_permit$nodes),gvis2_permit$edges,main="Permittting Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Budgeting and Administration
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g2_BA))
+{
+V(g2_BA)[i]$program<-input_attributes2$program[which(input_attributes2$name==V(g2_BA)[i]$name)]
+V(g2_BA)[i]$legacy<-input_attributes2$legacy[which(input_attributes2$name==V(g2_BA)[i]$name)]
+V(g2_BA)[i]$size<-input_attributes2$inDegree2[which(input_attributes2$name==V(g2_BA)[i]$name)]
+}
+
+V(g2_BA)$size<-V(g2_BA)$size*5
+
+lnodes <- data.frame(label = c("Diretr Office","Eco Services","Ext Affairs", "Fish & Aquatic","Gulf","IRTM","Jnt Ops","Law", "Migratory Birds","NW Refuge Sys", "Wild & Sport Fish", "SAMB", "Other"),
+color.background = c("cornsilk", "green", "darkred","orange", "red", "yellow","gold","gray","darkgreen", "purple","darkblue","skyblue", "aliceblue"),
+color.border = c("black","black","black","black","black","black","black","black","black","black", "black", "black", "black"),
+shape=c("dot","dot","dot","dot","dot","dot","dot","dot","dot","dot", "dot", "dot", "dot"))
+
+V(g2_BA)[V(g2_BA)$program=="Ecological Services"]$color <-"green"
+V(g2_BA)[V(g2_BA)$program=="External Affairs"]$color <- "darkred"
+V(g2_BA)[V(g2_BA)$program=="Fisheries and Aquatic Conservation"]$color <- "orange"
+V(g2_BA)[V(g2_BA)$program=="Gulf Restoration"]$color <- "red"
+V(g2_BA)[V(g2_BA)$program=="Information Resources and Technology Management (IRTM)"]$color <- "yellow"
+V(g2_BA)[V(g2_BA)$program=="Joint Administrative Operations"]$color <- "gold"
+V(g2_BA)[V(g2_BA)$program=="Law Enforcement"]$color <- "gray"
+V(g2_BA)[V(g2_BA)$program=="National Wildlife Refuge System"]$color <- "purple"
+V(g2_BA)[V(g2_BA)$program=="Other/Don't Know"]$color <- "aliceblue"
+V(g2_BA)[V(g2_BA)$program=="Regional Director's Office"]$color <- "cornsilk"
+V(g2_BA)[V(g2_BA)$program=="Wildlife and Sport Fish Restoration"]$color <- "darkblue"
+V(g2_BA)[V(g2_BA)$program=="Migratory Birds"]$color <- "darkgreen"
+V(g2_BA)[V(g2_BA)$legacy=="MB"]$color <- "green"
+V(g2_BA)[V(g2_BA)$legacy=="SA"]$color <- "red"
+
+#define edge attributes
+E(g2_BA)$Strength[E(g2_BA)$Strength == "Communication"] <- 1
+E(g2_BA)$Strength[E(g2_BA)$Strength == "Coordination"] <- 2
+E(g2_BA)$Strength[E(g2_BA)$Strength == "Collaboration"] <-3
+E(g2_BA)$Strength[is.na(E(g2_BA)$Strength)] <- 1
+E(g2_BA)$Strength <- as.numeric(E(g2_BA)$Strength)
+
+
+gvis2_BA<-toVisNetworkData(g2_BA)
+nodelist2_BA<-gvis2_BA$nodes
+gvis2_BA$edges$value<-gvis2_BA$edges$Strength #weights edges by strength of tie
+gvis2_BA$edges$value <-as.numeric(gvis2_BA$edges$value)
+gvis2_BA$edges$color <- NULL
+
+
+visNetwork(sort(gvis2_BA$nodes),gvis2_BA$edges,main="Budgeting and Administration Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("program"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+```{r network summary, include = FALSE, echo=FALSE, warning=FALSE}
+E(g2)
+table(E(g2)$Strength)
+V(g2)
+table(V(g2)$program)
+
+E(g2_landscape)
+table(E(g2_landscape)$Strength)
+V(g2_landscape)
+table(V(g2_landscape)$program)
+
+E(g2_science)
+table(E(g2_science)$Strength)
+V(g2_science)
+table(V(g2_science)$program)
+
+E(g2_permit)
+table(E(g2_permit)$Strength)
+V(g2_permit)
+table(V(g2_permit)$program)
+
+E(g2_BA)
+table(E(g2_BA)$Strength)
+V(g2_BA)
+table(V(g2_BA)$program)
+```
