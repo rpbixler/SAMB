@@ -1,0 +1,54 @@
+---
+title: "Reassigning Node Names"
+author: "Ethan Tenison"
+date: "5/23/2021"
+output: html_document
+---
+
+# Reassigning Node Names for Network Analysis
+
+Due privacy concerns, the survey participants' names need to be anonymized. To accomplish this, I row bound all the original network data, and assigned integers to participants. This will ensure that ID's are consistent throughout the analysis and that managers will have a key.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(janitor)
+```
+
+```{r raw_files, include=FALSE}
+
+layer1_raw <- read_csv("Layer 1_SAMB/SAMB_cohort_network.csv")
+layer2_raw <- read_csv("Layer 2_SAMB plus USFWS partners/USFWS_network_in region.csv")
+layer3_raw <- read_csv("Layer 3_SAMB plus External Partners/external_network_clean.csv")
+
+```
+
+## Data Cleaning
+
+First I cleaned the column names using the `Janitor` package and then selected ego and alter. After that I put all egos and alters into one list and kept only the unique values. Finally, I assigned a unique `id` to each survey participant.
+
+```{r data_cleaning}
+
+
+layer1 <- layer1_raw
+layer1 <- layer1 %>% clean_names() %>% select(ego, alter)
+all_names <- c(layer1[['ego']], layer1[['alter']])
+
+
+layer2 <- layer2_raw
+layer2 <- layer2 %>% clean_names() %>% select(ego, alter)
+all_names <- c(all_names, layer2[['ego']], layer2[['alter']])
+
+layer3 <- layer3_raw
+layer3 <- layer3 %>% clean_names() %>% select(ego, alter)
+all_names <- c(all_names, layer3[['ego']], layer3[['alter']])
+
+
+all_names <- unique(all_names)
+
+df <- as.data.frame(all_names)
+df <- tibble::rowid_to_column(df, "id")
+
+write.csv(df, "standardized_ids.csv", row.names = FALSE)
+```
