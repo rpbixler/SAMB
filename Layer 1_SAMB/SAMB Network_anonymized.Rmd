@@ -7,6 +7,7 @@ output: html_document
 
 ```{r include=FALSE}
 source("utils1.R")
+
 ```
 
 ```{r Clean SAMB Staff Network Data, include=FALSE}
@@ -372,8 +373,26 @@ V(g1)[V(g1)$legacy=="SA"]$color <- "red"
 
 gvis<-toVisNetworkData(g1)
 nodelist<-gvis$nodes
-#gvis$edges$value<-gvis$edges$Strength #weights edges by strength of tie; visualiztion gets messy
-visNetwork(sort(gvis$nodes),gvis$edges,main="All Connections with SA-MB Staff",width = "100%",height = "850px") %>%
+
+nodes <- sort(gvis$nodes)
+edges <- gvis$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+
+visNetwork(nodes,edges,main="All Connections with SA-MB Staff",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
@@ -412,7 +431,26 @@ V(g1_communicate)[V(g1_communicate)$legacy=="SA"]$color <- "red"
 
 gvis_communicate<-toVisNetworkData(g1_communicate)
 nodelist_communicate<-gvis_communicate$nodes
-visNetwork(sort(gvis_communicate$nodes),gvis_communicate$edges,main="SAMB Communication Connections",width = "100%",height = "850px") %>%
+
+nodes <- sort(gvis_communicate$nodes)
+edges <- gvis_communicate$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+
+visNetwork(nodes,edges,main="SAMB Communication Connections",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
@@ -450,7 +488,26 @@ V(g1_coordinate)[V(g1_coordinate)$legacy=="SA"]$color <- "red"
 
 gvis_coordinate<-toVisNetworkData(g1_coordinate)
 nodelist_coordinate<-gvis_coordinate$nodes
-visNetwork(sort(gvis_coordinate$nodes),gvis_coordinate$edges,main="SAMB Coordination Connections",width = "100%",height = "850px") %>%
+
+
+nodes <- sort(gvis_coordinate$nodes)
+edges <- gvis_coordinate$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="SAMB Coordination Connections",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
@@ -489,7 +546,25 @@ V(g1_collaboration)[V(g1_collaboration)$legacy=="SA"]$color <- "red"
 
 gvis_collaboration<-toVisNetworkData(g1_collaboration)
 nodelist_collaboration<-gvis_collaboration$nodes
-visNetwork(sort(gvis_collaboration$nodes),gvis_collaboration$edges,main="SAMB Collaboration Connections",width = "100%",height = "850px") %>%
+
+nodes <- sort(gvis_collaboration$nodes)
+edges <- gvis_collaboration$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="SAMB Collaboration Connections",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
@@ -551,8 +626,24 @@ gvis_landscape$edges$value <-as.numeric(gvis_landscape$edges$value)
 gvis_landscape$edges$value <- gvis_landscape$edges$value/10+1
 gvis_landscape$edges$color <- NULL
 
+nodes <- sort(gvis_landscape$nodes)
+edges <- gvis_landscape$edges
 
-visNetwork(sort(gvis_landscape$nodes),gvis_landscape$edges,main="Landscape Conservation Connections",width = "100%",height = "850px") %>%
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Landscape Conservation Connections",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
@@ -601,7 +692,25 @@ gvis_science$edges$value <-as.numeric(gvis_science$edges$value)
 gvis_science$edges$value <- gvis_science$edges$value/10+1
 gvis_science$edges$color <- NULL
 
-visNetwork(sort(gvis_science$nodes),gvis_science$edges,main="Science Support Connections",width = "100%",height = "850px") %>%
+
+nodes <- sort(gvis_science$nodes)
+edges <- gvis_science$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Science Support Connections",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
@@ -650,9 +759,24 @@ gvis_permit$edges$value <-as.numeric(gvis_permit$edges$value)
 gvis_permit$edges$value <- gvis_permit$edges$value/10+1
 gvis_permit$edges$color <- NULL
 
+nodes <- sort(gvis_permit$nodes)
+edges <- gvis_permit$edges
 
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
 
-visNetwork(sort(gvis_permit$nodes),gvis_permit$edges,main="Permittting Connections",width = "100%",height = "850px") %>%
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Permittting Connections",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
@@ -703,8 +827,24 @@ gvis_BA$edges$value <-as.numeric(gvis_BA$edges$value)
 gvis_BA$edges$value <- gvis_BA$edges$value/10+1
 gvis_BA$edges$color <- NULL
 
+nodes <- sort(gvis_BA$nodes)
+edges <- gvis_BA$edges
 
-visNetwork(sort(gvis_BA$nodes),gvis_BA$edges,main="Budgeting and Administration Connections",width = "100%",height = "850px") %>%
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Budgeting and Administration Connections",width = "100%",height = "850px") %>%
   visLayout(randomSeed = 123) %>%
   visEdges(smooth =T,
            arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
