@@ -1,0 +1,405 @@
+,name,organization,legacy,address,lon,lat
+1,Amy Keister,SAMB,SA,"Raleigh, NC",-78.6381787,35.7795897
+2,Anne Mini,SAMB,MB,"Ridgeland, MS",-90.1323087,32.4284761
+3,Beth Stys,SAMB,SA,"Monticello, FL",-83.8701636,30.5452022
+4,Bill Bartush,SAMB,MB,"Tyler, TX",-95.3010624,32.3512601
+5,Bill Uihlein,SAMB,SA,"Atlanta, GA",-84.3879824,33.7489954
+6,Blaine Elliott,SAMB,MB,"Madison, MS",-90.1153638,32.4618086
+7,Blair Tirpak,SAMB,SA,"Lafayette, LA",-92.0198427,30.2240897
+8,Brent Murry,SAMB,SA,"San Juan, PR",-66.1057355,18.4655394
+9,Carmen Simonton,SAMB,MB,"Atlanta, GA",-84.3879824,33.7489954
+10,Catherine Rideout,SAMB,MB,"Atlanta, GA",-84.3879824,33.7489954
+11,Christopher DeVore,SAMB,SA,"Cookeville, TN",-85.5016423,36.162839
+12,Cindy Fury,SAMB,MB,"Midway, FL",-84.4544023,30.4944581
+13,Daniel Adams,SAMB,SA,"Cookeville, TN",-85.5016423,36.162839
+14,Dawn James,SAMB,MB,"Yazoo City, MS",-90.4056468,32.8551326
+15,Dean Demarest,SAMB,MB,"Atlanta, GA",-84.3879824,33.7489954
+16,Emily Granstaff,SAMB,SA,"Cookeville, TN",-85.5016423,36.162839
+17,Green Todd,SAMB,SA,"Columbia, MO",-92.3340724,38.9517053
+18,Hilary Morris,SAMB,SA,"Raleigh, NC",-78.6381787,35.7795897
+19,Jeffrey Gleason,SAMB,MB,"Chiefland, FL",-82.8598421,29.4749621
+20,John Stanton,SAMB,MB,"Columbia, NC",-76.2521521,35.9176632
+21,John Tirpak,SAMB,SA,"Lafayette, LA",-92.0198427,30.2240897
+22,Karen Frizzell,SAMB,MB,"Auburn, AL",-85.4807825,32.6098566
+23,Keith McKnight,SAMB,MB,"Tyler, TX",-95.3010624,32.3512601
+24,Laura Brandt,SAMB,SA,"Davie, FL",-80.2521157,26.0764783
+25,Linda McHan,SAMB,MB,"Vicksburg, MS",-90.877882,32.3526456
+26,Louise Vaughn,SAMB,SA,"Raleigh, NC",-78.6381787,35.7795897
+27,Mallory Martin,SAMB,SA,"Raleigh, NC",-78.6381787,35.7795897
+28,Michelle Outlaw,SAMB,MB,"Atlanta, GA",-84.3879824,33.7489954
+29,Miguel Garcia-Bermudez,SAMB,SA,"San Juan, PR",-66.1057355,18.4655394
+30,Rachel Kirpes,SAMB,SA,"Lafayette, LA",-92.0198427,30.2240897
+31,Randy Wilson,SAMB,MB,"Yazoo City, MS",-90.4056468,32.8551326
+32,Red Todd,SAMB,SA,"Vero Beach, FL",-80.3972736,27.6386434
+33,Resee Collins,SAMB,MB,"DeLand, FL",-81.3031179,29.028318
+34,Rob Holbrook,SAMB,MB,"Fairhope, AL",-87.9033261,30.5229719
+35,Rua Mordecai,SAMB,SA,"Raleigh, NC",-78.6381787,35.7795897
+36,Steve Brock,SAMB,MB,"Brandon, MS",-90.001384,32.2788733
+37,Tom Edwards,SAMB,MB,"Tallulah, LA",-91.1867771,32.4084765
+38,Ulgonda Kirkpatrick,SAMB,MB,"Altamonte Springs, FL",-81.3656242,28.6611089
+39,Wylie Carr,SAMB,SA,"Atlanta, GA",-84.3879824,33.7489954
+40,Buddy Jones,SAMB,MB,"Winterville, NC",-77.401625,35.529042
+41,Cathy Watkins,SAMB,MB,"DeWitt, AR",-91.33561,34.295766
+42,Stephanie Bruner,SAMB,SA,"Atlanta, GA",-84.3879824,33.7489954
+43,Roy Freeman,SAMB,SA,"Atlanta, GA",-84.3879824,33.7489954
+44,Jose Barrios,SAMB,SA,"Atlanta, GA",-84.3879824,33.7489954
+45,Yvonne Allen,SAMB,SA,"Baton Rouge, LA",-91.1871466,30.4514677
+46,Amy Silvano,AL Dept of Conservation and Natural Resources,NA,"Montgomery, AL",-86.3077368,32.3792233
+47,Barry Grand,USGS Coop Unit,NA,"Auburn, AL",-85.4807825,32.6098566
+48,Erice Soehren,AL Dept of Conservation and Natural Resources,NA,"Montgomery, AL",-86.3077368,32.3792233
+49,Traci Wood,AL Dept of Conservation and Natural Resources,NA,"Montgomery, AL",-86.3077368,32.3792233
+50,Claude Jenkins,Alabama Wildlife Federation,NA,"Millbrook, AL",-86.3619163,32.4798575
+51,Becky Keller,American Bird Conservancy,NA,"Blacksburg, VA",-80.4139393,37.2295733
+52,Cara Joos,American Bird Conservancy,NA,"Branson, MO",-93.2185144,36.6436731
+53,Emily Jo Williams,American Bird Conservancy,NA,"Atlanta, GA",-84.3879824,33.7489954
+54,Jane Fitzgerald,American Bird Conservancy,NA,"Branson, MO",-93.2185144,36.6436731
+55,Jim Giocomo,American Bird Conservancy,NA,"Austin, TX",-97.7430608,30.267153
+56,Kyle Brazil,American Bird Conservancy,NA,"Branson, MO",-93.2185144,36.6436731
+57,Merrie Morrison,American Bird Conservancy,NA,"The Plains, VA",-77.7738827,38.8620578
+58,Todd Fearer,American Bird Conservancy,NA,"Blacksburg, VA",-80.4139393,37.2295733
+59,American Eagle Foundation,American Eagle Foundation,NA,"Pigeon Forge, TN",-83.5543329,35.7884241
+60,Allison Fowler,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+61,Ashley Gramza,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+62,Bubba Groves,AR Game & Fish Commission,NA,"Monticello, AR",-91.7909639,33.6289974
+63,David Graves,AR Game & Fish Commission,NA,"Brinkley, AR",-91.1945688,34.8878719
+64,Garrick Dugger,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+65,Jason Jackson,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+66,Jennifer Wright,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+67,Luke Lewis,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+68,Luke Naylor,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+69,Ricky Chastain,AR Game & Fish Commission,NA,"Hope, AR",-93.5915665,33.6670615
+70,Roger Mangham,AR Game & Fish Commission,NA,"Little Rock, AR",-92.2895948,34.7464809
+71,Bill Holimon,Arkansas Natural Heritage,NA,"Little Rock, AR",-92.2895948,34.7464809
+72,Maggie Ernest Johnson,Association of Fish & Wildlife Agencies,NA,"Washington, DC",-77.0368707,38.9071923
+73,Mark Humpert,Association of Fish & Wildlife Agencies,NA,"Washington, DC",-77.0368707,38.9071923
+74,Auburn Southeastern Raptor Center,Auburn Southeastern Raptor Center,NA,"Auburn, AL",-85.4807825,32.6098566
+75,James Fukai,Auburn Univ,NA,"Auburn, AL",-85.4807825,32.6098566
+76,Laura Bell,Auburn Univ,NA,"Auburn, AL",-85.4807825,32.6098566
+77,Michelle Straw,Auburn Univ,NA,"Auburn, AL",-85.4807825,32.6098566
+78,Paula Davis,Auburn Univ,NA,"Auburn, AL",-85.4807825,32.6098566
+79,Seth Maddox,Auburn Univ,NA,"Auburn, AL",-85.4807825,32.6098566
+80,Audubon Center for Birds of Prey,Audubon Center for Birds of Prey,NA,"Maitland, FL",-81.3631244,28.6277767
+81,Julie Wraithmell,Audubon Society,NA,"Miami, FL",-80.1917902,25.7616798
+82,Kara Fox,Audubon Society,NA,"Mobile, AL",-88.0398912,30.6953657
+83,Marianne Korosy,Audubon Society,NA,"Tallahassee, FL",-84.2807329,30.4382559
+84,Avian Reconditioning Center,Avian Reconditioning Center,NA,"Apopka, FL",-81.5322149,28.6934076
+85,Ken Meyer,Avian Research and Conservation Institute,NA,"Gainesville, FL",-82.3248262,29.6516344
+86,Chad Allison,Avon Park AF Range Sentinel Landscape,NA,"Bartow, FL",-81.8431374,27.8964147
+87,Bio Tech Consulting,Bio Tech Consulting,NA,"Orlando, FL",-81.3792365,28.5383355
+88,Brian Caneron,BOEM (Bureau of Ocean Energy Management),NA,"Elmwood, LA",-90.1897975,29.9565932
+89,Evan Adams,BRI (Biodiversity Research Institute?),NA,"Portland, ME",-70.2568189,43.6590993
+90,Cape Fear Raptor Center,Cape Fear Raptor Center,NA,"Rocky Point, NC",-77.8877304,34.4350957
+91,Carolina Raptor Center,Carolina Raptor Center,NA,"Charlotte, NC",-80.8431267,35.2270869
+92,Kara Drane,Catawba Council of Government,NA,"Cawtaba, NC",-81.0756345,35.7073558
+93,Chattahoochee Nature Center,Chattahoochee Nature Center,NA,"Roswell, GA",-84.3615555,34.0232431
+94,Matt Brownlee,Clemson University,NA,"Clemson, SC",-82.8373654,34.6834382
+95,Jim Pahl,Coastal Protection & Restoration Authority,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+96,Katie Freer,Coastal Protection & Restoration Authority,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+97,Matt Mumfrey,Coastal Protection & Restoration Authority,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+98,Mary Crockett,Congaree Land Trust,NA,"Columbia, SC",-81.0348144,34.0007104
+99,Kat Diersen,Defenders of Wildlife,NA,"Nashville, TN",-86.7816016,36.1626638
+100,Allyn Childress,DOI Office of Everglades Restoration Initiatives,NA,"Davie, FL",-80.2521157,26.0764783
+101,Lourdes Olmedo,DRNA (Puerto Rico Departmento de Recursos Naturales y Ambientales),NA,"San Juan, PR",-66.1057355,18.4655394
+102,Justin Park,Ducks Unlimited,NA,"Hanahan, SC",-80.0031833,32.9305786
+103,Penny Presson,Ducks Unlimited,NA,"Ridgeland, MS",-90.1323087,32.4284761
+104,Dale James,Ducks Unlimited,NA,"Jackson, MS",-90.1848103,32.2987573
+105,Mike Mitchell,Ducks Unlimited,NA,"Ann Arbor, MI",-83.7430378,42.2808256
+106,Scott Manley,Ducks Unlimited,NA,"Ridgeland, MS",-90.1323087,32.4284761
+107,Tim Willis,Ducks Unlimited,NA,"Ridgeland, MS",-90.1323087,32.4284761
+108,Ed Penny,Ducks Unlimited,NA,"Jackson, MS",-90.1848103,32.2987573
+109,Emily Purcell,Ducks Unlimited,NA,"Charleston, SC",-79.9310512,32.7764749
+110,Jerry Holden,Ducks Unlimited,NA,"Ridgeland, MS",-90.1323087,32.4284761
+111,Jessica Schulz,Ducks Unlimited,NA,"Jackson, MS",-90.1848103,32.2987573
+112,Jill Sonka,Ducks Unlimited,NA,"Hanahan, SC",-80.0031833,32.9305786
+113,Michael Mitchell,Ducks Unlimited,NA,"Brighton, MI",-83.7802214,42.5294773
+114,Scott Manley,Ducks Unlimited,NA,"Ridgeland, MS",-90.1323087,32.4284761
+115,Whitney Gray,FL Dept of Environmental Protection,NA,"Tallahassee, FL",-84.2807329,30.4382559
+116,Brett Scheffers,FL Dept of Environmental Protection,NA,"Tallahassee, FL",-84.2807329,30.4382559
+117,Andrew Cox,FL Fish & Wildlife Conservation Commission,NA,"Gainesville, FL",-82.3248262,29.6516344
+118,Andrew Fanning,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+119,Craig Faulhaber,FL Fish & Wildlife Conservation Commission,NA,"Ocala, FL",-82.1400923,29.1871986
+120,Florida Fish and Wildlife Conservation Commission,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+121,Janell Brush,FL Fish & Wildlife Conservation Commission,NA,"Gainesville, FL",-82.3248262,29.6516344
+122,Robin Boughton,FL Fish & Wildlife Conservation Commission,NA,"Gainesville, FL",-82.3248262,29.6516344
+123,Thomas Eason,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+124,Blair Hayman,FL Fish & Wildlife Conservation Commission,NA,"Lake City, FL",-82.6392899,30.1896756
+125,Brad Gruver,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+126,Claire Sunquist,FL Fish & Wildlife Conservation Commission,NA,"Ocala, FL",-82.1400923,29.1871986
+127,Kipp Krohlich,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+128,Laura Jerome,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+129,Melissa Tucker,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+130,Rick Brown,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+131,Scott Engstler,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+132,Scott Olson,FL Fish & Wildlife Conservation Commission,NA,"Tallahassee, FL",-84.2807329,30.4382559
+133,Jon Oetting,Florida Natural Areas Inventory,NA,"Tallahassee, FL",-84.2807329,30.4382559
+134,Kassie Ernst,Florida State Univ,NA,"Tallahassee, FL",-84.2807329,30.4382559
+135,Florida Wildlife Rehabilitators Association,Florida Wildlife Rehabilitators Association,NA,"Melbourne, FL",-80.6081089,28.0836269
+136,Auriel Fournier,Forbes Biological Station,NA,"Havana, IL",-90.0609506,40.3000428
+137,Lauren Ward,Forest Landowners Association,NA,"Boone, NC",-81.6745517,36.216795
+138,Peggy Jo Nadler,US Forest Service,NA,"Columbia, SC",-81.0348144,34.0007104
+139,Bob Sergeant,GA Dept of Natural Resources,NA,"Atlanta, GA",-84.3879824,33.7489954
+140,Jamie Hawkins,GA Dept of Natural Resources,NA,"Branson, GA",-93.2139145,36.6434233
+141,Jon Ambrose,GA Dept of Natural Resources,NA,"Social Circle, GA",-83.718231,33.656228
+142,Wayne Hubbard,GA Dept of Natural Resources,NA,"Social Circle, GA",-83.718231,33.656228
+143,Joe Lancaster,Gulf Coast Joint Venture,NA,"Lafayette, LA",-92.0198427,30.2240897
+144,Ben Gramling,Greater Nashville Environmental Roundtable,NA,"Nashville, TN",-86.7816016,36.1626638
+145,Laura Bowie,Gulf of Mexico Alliance,NA,"Gulfport, MS",-89.0928155,30.3674198
+146,Christina Mohrman,Gulf of Mexico Alliance,NA,"Gulfport, MS",-89.0928155,30.3674198
+147,Jeremy Poirier,Int'l Paper,NA,"Shreveport, LA",-93.7501789,32.5251516
+148,Cielo,Island Conservation,NA,"Cabo Rojo, PR",-67.1469964,18.0875347
+149,Jose L,Island Conservation,NA,"Cabo Rojo, PR",-67.1469964,18.0875347
+150,Gregg Elliott,K Gregg Consulting,NA,"Memphis, TN",-90.0489801,35.1495343
+151,Chris Garland,KY Dept of Fish & Wildlife Resources,NA,"Frankfort, KY",-84.8732835,38.2009055
+152,Dan Figert,KY Dept of Fish & Wildlife Resources,NA,"Lexington, KY",-84.5037164,38.0405837
+153,Kate Slankard,KY Dept of Natural Resources,NA,"Frankfort, KY",-84.8732835,38.2009055
+154,John Sheehan,LA Dept of Environmental Quality,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+155,Robert Dobbs,LA Dept of Natural Resources,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+156,Melissa Collins,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+157,Amity Bass,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+158,Annie Howard,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+159,David Breithaupt,LA Dept of Wildlife & Fisheries,NA,"Alexandria, LA",-92.4451371,31.3112936
+160,Donald Locasio,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+161,Jason Olszak,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+162,Jeff Duguay,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+163,Kenny Ribbeck,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+164,Larry Reynolds,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+165,Nicole Lorenz,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+166,Paul Link,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+167,Rob Dobbs,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+168,Robby Maxwell,LA Dept of Wildlife & Fisheries,NA,"Lake Charles, LA",-93.2173758,30.2265949
+169,Suzanne Terrell,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+170,Todd Baker,LA Dept of Wildlife & Fisheries,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+171,Megan La Peyre,Louisiana State Univ,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+172,Sammy King,Louisiana State Univ,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+173,Adam Butler,"Mississippi Dept of Fish, Wildlife & Parks",NA,"Jackson, MS",-90.1848103,32.2987573
+174,Houston Havens,"Mississippi Dept of Fish, Wildlife & Parks",NA,"Grenada, MS",-89.8084192,33.7690049
+175,John Gruchy,"Mississippi Dept of Fish, Wildlife & Parks",NA,"Hattiesburg, MS",-89.2903392,31.3271189
+176,Russ Walsh,"Mississippi Dept of Fish, Wildlife & Parks",NA,"Jackson, MS",-90.1848103,32.2987573
+177,Scott Baker,"Mississippi Dept of Fish, Wildlife & Parks",NA,"Jackson, MS",-90.1848103,32.2987573
+178,Wes,Mississippi State Univ,NA,"Starkville, MS",-88.8183872,33.4503998
+179,Kristine Evans,Mississippi State Univ,NA,"Starkville, MS",-88.8183872,33.4503998
+180,Mark Woodrey,Mississippi State Univ,NA,"Biloxi, MS",-88.8853078,30.3960318
+181,Mike Colvin,Mississippi State Univ,NA,"Starkville, MS",-88.8183872,33.4503998
+182,Mississippi State Univ,Mississippi State Univ,NA,"Starkville, MS",-88.8183872,33.4503998
+183,Renee Collini,Northern Gulf of Mexico Sentinel Site Cooperative,NA,"Biloxi, MS",-88.8853078,30.3960318
+184,Steve Miranda,Mississippi State Univ,NA,"Starkville, MS",-88.8183872,33.4503998
+185,Joel Porath,MO Dept of Conservation,NA,"Jefferson City, MO",-92.1735164,38.5767017
+186,Nate Muenks,MO Dept of Conservation,NA,"Jefferson City, MO",-92.1735164,38.5767017
+187,Modica & Associates,Modica & Associates,NA,"Orlando, FL",-81.3792365,28.5383355
+188,James Cummins,Wildlife Mississippi,NA,"Stoneville, MS",-90.9151014,33.4240055
+189,Rhonda Price,MS Dept Marine Resources,NA,"Biloxi, MS",-88.8853078,30.3960318
+190,Carey Schafer,NAS Gulf Research Program Science Policy Fellowship,NA,"Biloxi, MS",-88.8853078,30.3960318
+191,Steve Chapman,National Bobwhite Conservation Initiative,NA,"Milledgeville, GA",-83.2320991,33.0801429
+192,Christy Coghlan,National Conservation Training Center (USFWS),NA,"Shepherdstown, WV",-77.8041609,39.4300996
+193,Mike Allen,National Conservation Training Center (USFWS),NA,"Shepherdstown, WV",-77.8041609,39.4300996
+194,Darren Miller,National Council on Air & Stream Quality,NA,"Starkeville, MS",-88.8183872,33.4503998
+195,David Reeves,National Fish & Wildlife Federation,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+196,Mark Kinzer,National Park Service,NA,"Atlanta, GA",-84.3879824,33.7489954
+197,Chris Watson,National Parks Conservation Association,NA,"Knoxville, TN",-83.9207392,35.9606384
+198,Nilda,Natural Resources (Maybe PR DRNA?),NA,"San Juan, PR",-66.1057355,18.4655394
+199,Ramon L,Natural Resources (Maybe PR DRNA?),NA,"San Juan, PR",-66.1057355,18.4655394
+200,Healy Hamilton,NatureServe,NA,"Arlington, VA",-77.0909809,38.8816208
+201,Erin Seekamp,NC State Univ,NA,"Raleigh, NC",-78.6381787,35.7795897
+202,Lou Addor,NC State Univ,NA,"Raleigh, NC",-78.6381787,35.7795897
+203,Nils Peterson,NC State Univ,NA,"Raleigh, NC",-78.6381787,35.7795897
+204,Sam Cook,NC State Univ,NA,"Raleigh, NC",-78.6381787,35.7795897
+205,Thomas,NC State Univ,NA,"Raleigh, PR",-78.7287065,35.8070486
+206,CC King,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+207,Cindy Simpson,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+208,Gordon Myers,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+209,Jessie Birckhead,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+210,Kacy Cook,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+211,Todd Ewing,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+212,Ricky O'Neill,Neely Lumber,NA,"Magnolia, AR",-93.239334,33.2670725
+213,Newkirk Environmental,Newkirk Environmental,NA,"Mt Pleasant, SC",-79.8284258,32.8323225
+214,Izzie Hirschy,The Conservation Fund,NA,"Chapel Hill, NC",-79.0558445,35.9131996
+215,Jimmy Bullock,"Resource Management Services, LLC",NA,"Birmingham, AL",-86.8103567,33.5185892
+216,Justin Boner,The Conservation Fund,NA,"Chapel Hill, NC",-79.0558445,35.9131996
+217,Margaret Fields,The Nature Conservancy,NA,"Durham, NC",-78.898619,35.9940329
+218,Michael Flynn,North Carolina Coastal Federation,NA,"Manns Harbor, NC",-75.7615713,35.8856041
+219,Rob Walker,Shoreline Conservation Initiative,NA,"Raleigh, NC",-78.6381787,35.7795897
+220,Sara Guidi,Triangle Community Foundation,NA,"Raleigh, NC",-78.6381787,35.7795897
+221,Chris Ellis,NOAA,NA,"Charleston, SC",-79.9310512,32.7764749
+222,Christina Fellas,NOAA,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+223,Courtney Schupp,NOAA,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+224,Jenny Litz,NOAA,NA,"Miami, FL",-80.1917902,25.7616798
+225,Julien Lartigue,NOAA,NA,"Stennis, MS",-89.5994225,30.3619837
+226,Mel Landry,NOAA,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+227,Cheryl Clark,Northern Gulf of Mexico Sentinel Site Cooperative,NA,"Biloxi, MS",-88.8853078,30.3960318
+228,Darryl Boudreau,Northwest Florida Water Management District,NA,"Pace, FL",-87.1610807,30.5993603
+229,Maria Whitehead,Open Space Institute,NA,"Wacamaw, SC",-79.0423553,33.7222003
+230,Kimberly Tillman,Osceola to Ocala Wildlife Corridor,NA,"Jacksonville, FL",-81.655651,30.3321838
+231,Fernando,Para La Naturaleza,NA,"San Juan, PR",-66.1057355,18.4655394
+232,Jorge,Para La Naturaleza,NA,"San Juan, PR",-66.1057355,18.4655394
+233,Soledad G.,Para La Naturaleza,NA,"San Juan, PR",-66.1057355,18.4655394
+234,Nicole,"Planning, Fish and Wildlife",NA,"Charlotte Amalie, UVI",-64.9307007,18.3419004
+235,Salem Saloom,Private Landowner,NA,"Brewton, AL",-87.0721918,31.1051779
+236,Ernesto Diaz,Puerto Rico Coastal Zone Management,NA,"San Juan, PR",-66.1057355,18.4655394
+237,Austin Klais,Quail Forever,NA,"Little Rock, AR",-92.2895948,34.7464809
+238,Ryan Diener,Quail Forever,NA,"Little Rock, LA",-92.2895948,34.7464809
+239,Jessica Henkel,RESTORE,NA,"New Orleans, LA",-90.0715323,29.9510658
+240,Matt Love,RESTORE,NA,"Ocean Springs, MS",-88.8278057,30.4113097
+241,Southeast Aquatic Resources Partnership,Southeast Aquatic Resources Partnership,NA,"Panama City, FL",-85.6602058,30.1588129
+242,Amy Teagler,SC Dept Natural Resources,NA,"Charleston, SC",-79.9310512,32.7764749
+243,Anna Smith,SC Dept Natural Resources,NA,"Columbia, SC",-81.0348144,34.0007104
+244,Charlotte Hope,SC Dept Natural Resources,NA,"Charleston, SC",-79.9310512,32.7764749
+245,SC Dept Natural Resources,SC Dept Natural Resources,NA,"Columbia, SC",-81.0348144,34.0007104
+246,Curtis Hopkins,Southeastern Association of Fish and Wildlife Agencies,NA,"Jackson, MS",-90.1848103,32.2987573
+247,Brian Garrett,South Florida Water Management District,NA,"West Palm Beach, FL",-80.0533746,26.7153424
+248,Holly Androetti,South Florida Water Management District,NA,"West Palm Beach, FL",-80.0533746,26.7153424
+249,Marcone Campos,Sieve analytics,NA,"San Juan, PR",-66.1057355,18.4655394
+250,Mitch Aide,Sieve analytics,NA,"San Juan, PR",-66.1057355,18.4655394
+251,Roger Pugliese,South Atlantic Fishery Management Council,NA,"North Charleston, SC",-80.0130514,32.8771106
+252,Fred Sklar,South Florida Water Management District,NA,"West Palm Beach, FL",-80.0533746,26.7153424
+253,Jessica Graham,Southeast Aquatic Resources Partnership,NA,"Panama City, FL",-85.6602058,30.1588129
+254,Dwayne Estes,Southeast Grasslands Initiative,NA,"Clarksville, TN",-87.3594528,36.5297706
+255,Addie Thornton,Southeast Regional Partnership for Planning & Sustainability (SERPPAS),NA,"Raleigh, NC",-78.6381787,35.7795897
+256,Southeastern Cooperative Wildlife Disease Study,Southeastern Cooperative Wildlife Disease Study,NA,"Athens, GA",-83.357567,33.9519347
+257,David Godwin,Southern Fire Exchange,NA,"Tallahassee, FL",-84.2807329,30.4382559
+258,Bryan Watts,Center for Conservation Biology,NA,"Williamsburg, VA",-76.7074571,37.2707022
+259,Doug Howell,NC Wildlife Resources Commission,NA,"Edenton, NC",-76.6077213,36.057938
+260,Greg Balkcom,GA Dept of Natural Resources,NA,"Fort Valley, GA",-83.8874084,32.5537585
+261,Jessie Whitehead,NC Office of Recovery and Resiliency,NA,"Raleigh, NC",-78.6381787,35.7795897
+262,Kyle Briggs,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+263,Molly Kneece,SC Dept Natural Resources,NA,"Georgetown, SC",-79.2944964,33.376834
+264,Sara Parker Pauley,MO Dept of Conservation,NA,"Jefferson City, MO",-92.1735164,38.5767017
+265,Scott Anderson,NC Wildlife Resources Commission,NA,"Raleigh, NC",-78.6381787,35.7795897
+266,Amanda Sesser,Strategic Conservation Assessment,NA,"New Orleans, LA",-90.0715323,29.9510658
+267,Bill Palmer,Tall Timbers Research Station,NA,"Tallahassee, FL",-84.2807329,30.4382559
+268,Joe Noble,Tall Timbers Research Station,NA,"Tallahassee, FL",-84.2807329,30.4382559
+269,Jeff Schaeffer,Tennessee Tech Univ,NA,"Cookeville, TN",-85.5016423,36.162839
+270,Wesley Giddens,Tennessee Tech Univ,NA,"Cookeville, TN",-85.5016423,36.162839
+271,Tennessee Tech Univ,Tennessee Tech University,NA,"Cookeville, TN",-85.5016423,36.162839
+272,Clay Green,Texas State Univ,NA,"San Marcos, TX",-97.9413941,29.8832749
+273,Ad Platt,The Longleaf Alliance,NA,"Milton, FL",-87.0396881,30.6324149
+274,Lucas Furman,The Longleaf Alliance,NA,"Pensacola, FL",-87.2169149,30.421309
+275,Ryan Bollinger,The Longleaf Alliance,NA,"Columbia, SC",-81.0348144,34.0007104
+276,Vernon Compton,The Longleaf Alliance,NA,"Milton, FL",-87.0396881,30.6324149
+277,Derek Alkire,The National Wild Turkey Federation,NA,"Tupelo, MS",-88.7033859,34.2576066
+278,Jeremy Everitt,The National Wild Turkey Federation,NA,"Hot Springs, AR",-93.0551795,34.5037004
+279,Bryan Piazza,The Nature Conservancy,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+280,Dan Weber,The Nature Conservancy,NA,"Bossier City, LA",-93.7321228,32.5159852
+281,David Bishop,The Nature Conservancy,NA,"Aiken, SC",-81.7195533,33.5604168
+282,Jason Milks,The Nature Conservancy,NA,"Little Rock, AR",-92.2895948,34.7464809
+283,Jeff Fore,The Nature Conservancy,NA,"Little Rock, AR",-92.2895948,34.7464809
+284,John Prince,The Nature Conservancy,NA,"Durham, NC",-78.898619,35.9940329
+285,Rachel Wortham,The Nature Conservancy,NA,"Little Rock, AR",-92.2895948,34.7464809
+286,Rob Bullard,The Nature Conservancy,NA,"Nashville, TN",-86.7816016,36.1626638
+287,Ron Seiss,The Nature Conservancy,NA,"Memphis, TN",-90.0489801,35.1495343
+288,Seth Blitch,The Nature Conservancy,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+289,Alyssa Dausman,The Water Institute of the Gulf,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+290,Erin Kiskaddon,The Water Institute of the Gulf,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+291,Mike Miner,The Water Institute of the Gulf,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+292,Soupy Dalyander,The Water Institute of the Gulf,NA,"St. Petersburg, FL",-82.6402915,27.7676008
+293,Tim Carruthers,The Water Institute of the Gulf,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+294,Shawna Mitchell,TN Aquarium Conservation Institute,NA,"Chattanooga, TN",-85.3096801,35.0456297
+295,Heather Slayton,TN Dept of Agriculture,NA,"Nashville, TN",-86.7816016,36.1626638
+296,John McClurkan,TN Dept of Agriculture,NA,"Nashville, TN",-86.7816016,36.1626638
+297,Rachel Greene,TN Division of Forestry,NA,"Nashville, TN",-86.7816016,36.1626638
+298,Gillian Bee,TN River Basin Network,NA,"Clemson, SC",-82.8373654,34.6834382
+299,Dan Fuqua,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+300,David Hanni,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+301,Jason Maxedon,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+302,Jeanette Jones,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+303,Mark Thurman,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+304,Pandy Upchurch,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+305,Greg Wathen,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+306,Walter Brown,TN Wildlife Resources Agency,NA,"Nashville, TN",-86.7816016,36.1626638
+307,Trileaf Consulting,Trileaf Consulting,NA,"Maitland, FL",-81.3631244,28.6277767
+308,Stacey Shankle,Trust for Public Land,NA,"Jackson, MS",-90.1848103,32.2987573
+309,Mike Marshall,TX A&M Univ,NA,"Dallas, TX",-96.7969879,32.7766642
+310,Danielle Bates,TX Parks and Wildlife Dept,NA,"Austin, TX",-97.7430608,30.267153
+311,Jeff Raasch,TX Parks and Wildlife Dept,NA,"Austin, TX",-97.7430608,30.267153
+312,Marcus Mustin,USDA Wildlife Services,NA,"Raleigh, NC",-78.6381787,35.7795897
+313,Emad Habib,Univ Louisiana-Lafayette,NA,"Lafayette, LA",-92.0198427,30.2240897
+314,David Krementz,Univ of Arkansas,NA,"Fayetteville, AR",-94.1718542,36.082156
+315,Doug Osborne,Univ of Arkansas-Monticello,NA,"Monticello, AR",-91.7909639,33.6289974
+316,Abby Powell,Univ of Florida,NA,"Gainesville, FL",-82.3248262,29.6516344
+317,Frank Mazzotti,Univ of Florida,NA,"Gainesville, FL",-82.3248262,29.6516344
+318,Nia Morales,Univ of Florida,NA,"Gainesville, FL",-82.3248262,29.6516344
+319,Peter Frederick,Univ of Florida,NA,"Gainesville, FL",-82.3248262,29.6516344
+320,Tom Hoctor,Univ of Florida,NA,"Gainesville, FL",-82.3248262,29.6516344
+321,Bob Cooper,Univ of Georgia,NA,"Athens, GA",-83.357567,33.9519347
+322,Bynum Boley,Univ of Georgia,NA,"Athens, GA",-83.357567,33.9519347
+323,Lisa Webb,Univ of Missouri,NA,"Columbia, MO",-92.3340724,38.9517053
+324,Tom Bonnot,Univ of Missouri,NA,"Columbia, MO",-92.3340724,38.9517053
+325,Shawn Johnson,Univ of Montana,NA,"Missoula, MT",-113.9940314,46.8721284
+326,Dunkin Elkins,Univ of North Carolina,NA,"Chapel Hill, NC",-79.0558445,35.9131996
+327,Elvia,Univ of Puerto Rico,NA,"San Juan, PR",-66.1057355,18.4655394
+328,Phil Darby,Univ of West Florida,NA,"Pensacola, FL",-87.2169149,30.421309
+329,University of Florida Veterinary Medical Center,University of Florida Veterinary Medical Center,NA,"Gainesville, FL",-82.3248262,29.6516344
+330,Ruber,UPR-B,NA,"San Juan, PR",-66.1057355,18.4655394
+331,Mei Yu,UPR-RP,NA,"San Juan, PR",-66.1057355,18.4655394
+332,Brad LaBorde,US Army Corps of Eng,NA,"New Orleans, LA",-90.0715323,29.9510658
+333,Brian Zettle,US Army Corps of Eng,NA,"Mobile, AL",-88.0398912,30.6953657
+334,Debbie Scerno,US Army Corps of Eng,NA,"Atlanta, GA",-84.3879824,33.7489954
+335,Gretchen Ehlinger,US Army Corps of Eng,NA,"Jacksonville, FL",-81.655651,30.3321838
+336,Jackie Wittman,US Army Corps of Eng,NA,"Mobile, AL",-88.0398912,30.6953657
+337,Kristina May,US Army Corps of Eng,NA,"Baltimore, MD",-76.6121893,39.2903848
+338,Laura Dunkin,US Army Corps of Eng,NA,"Vicksburg, MS",-90.877882,32.3526456
+339,Susan Gibson,US Army Corps of Eng,NA,"Atlanta, GA",-84.3879824,33.7489954
+340,US Army Corps of Eng,US Army Corps of Eng,NA,"Nashville, TN",-86.7816016,36.1626638
+341,Brett Dunlap,US Dept of Agriculture - APHIS,NA,"Madison, TN",-86.7143516,36.2562002
+342,Cailey Thomas,US Dept of Agriculture - APHIS,NA,"Gainesville, FL",-82.3248262,29.6516344
+343,Chris Youngblood,US Dept of Agriculture - APHIS,NA,"Sherwood, AR",-92.2243153,34.8150907
+344,Dustin Lunsford,US Dept of Agriculture - APHIS,NA,"Starkville, MS",-88.8183872,33.4503998
+345,Kris Godwin,US Dept of Agriculture - APHIS,NA,"Starkville, MS",-88.8183872,33.4503998
+346,Michael Kirby,US Dept of Agriculture - APHIS,NA,"Sherwood, AR",-92.2243153,34.8150907
+347,Robert Byrd,US Dept of Agriculture - APHIS,NA,"Sherwood, AR",-92.2243153,34.8150907
+348,Steven Smith,US Dept of Agriculture - APHIS,NA,"Raleigh, NC",-78.6381787,35.7795897
+349,Ryan Orndorff,US Dept of Defense,NA,"Washington, DC",-77.0368707,38.9071923
+350,Matthew Harwell,US Environmental Protection Agency,NA,"Gulf Breeze, FL",-87.1638574,30.3571438
+351,Rick Durbrow,US Environmental Protection Agency,NA,"Atlanta, GA",-84.3879824,33.7489954
+352,Cassandra Johnson,US Forest Service,NA,"Athens, GA",-83.357567,33.9519347
+353,Daniel McInnis,US Forest Service,NA,"Atlanta, GA",-84.3879824,33.7489954
+354,Eddie Taylor,US Forest Service,NA,"Lufkin, TX",-94.729097,31.3382406
+355,Jason Nolde,US Forest Service,NA,"Pineville, LA",-92.4343035,31.3224044
+356,Jessica,US Forest Service,NA,"San Juan, PR",-66.1057355,18.4655394
+357,John Schelhas,US Forest Service,NA,"Athens, GA",-83.357567,33.9519347
+358,Keenan,US Forest Service,NA,"Luquillo, PR",-65.7206559,18.3789857
+359,Tamara Heartsill,US Forest Service,NA,"San Juan, PR",-66.1057355,18.4655394
+360,Tim Mersmann,US Forest Service,NA,"Andalusia, AL",-86.4832913,31.3085039
+361,William,US Forest Service,NA,"San Juan, PR",-66.1057355,18.4655394
+362,Ann Hijuelos,US Geological Service,NA,"New Orleans, LA",-90.0715323,29.9510658
+363,Dan Kroes,US Geological Service,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+364,Daniel Twedt,US Geological Service,NA,"Memphis, TN",-90.0489801,35.1495343
+365,Greg Steyer,US Geological Service,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+366,Hardin Waddle,US Geological Service,NA,"Davie, FL",-80.2521157,26.0764783
+367,Jacob LaFontaine,US Geological Service,NA,"Norcross, GA",-84.2135309,33.9412127
+368,James Cronin,US Geological Service,NA,"Lafayette, LA",-92.0198427,30.2240897
+369,Jessica Walker,US Geological Service,NA,"Tuscon, AZ",-110.9747108,32.2226066
+370,Mike Osland,US Geological Service,NA,"Lafayette, LA",-92.0198427,30.2240897
+371,Nicholas Enwright,US Geological Service,NA,"Lafayette, LA",-92.0198427,30.2240897
+372,Nick Aumen,US Geological Service,NA,"Davie, FL",-80.2521157,26.0764783
+373,Pat Jodice,US Geological Service,NA,"Clemson, SC",-82.8373654,34.6834382
+374,Sarai Piazza,US Geological Service,NA,"Baton Rouge, LA",-91.1871466,30.4514677
+375,Steve Hartely,US Geological Service,NA,"Lafayette, LA",-92.0198427,30.2240897
+376,TJ Zenzal,US Geological Service,NA,"Lafayette, LA",-92.0198427,30.2240897
+377,Todd Katzner,US Geological Service,NA,"Boise, ID",-116.2023137,43.6150186
+378,US Geological Service,US Geological Service,NA,"Lafayette, LA",-92.0198427,30.2240897
+379,Agnes McLean,US National Park Service,NA,"Homestead, FL",-80.4775569,25.4687224
+380,Janet Cakir,US National Park Service,NA,"Raleigh, NC",-78.6381787,35.7795897
+381,US National Park Service,US National Park Service,NA,"Nashville, TN",-86.7816016,36.1626638
+382,Amanda Mathis,US Natural Resources Conservation Service,NA,"Little Rock, AR",-92.2895948,34.7464809
+383,Dustin Farmer,US Natural Resources Conservation Service,NA,"Alexandria, LA",-92.4451371,31.3112936
+384,Jason Keenan,US Natural Resources Conservation Service,NA,"Jackson, MS",-90.1848103,32.2987573
+385,Jenny Atkins,US Natural Resources Conservation Service,NA,"Cookeville, TN",-85.5016423,36.162839
+386,Julie Daughdrill,US Natural Resources Conservation Service,NA,"Jackson, MS",-90.1848103,32.2987573
+387,Kevin Nelms,US Natural Resources Conservation Service,NA,"Grenada, MS",-89.8084192,33.7690049
+388,Leon Tillman,US Natural Resources Conservation Service,NA,"Cookeville, TN",-85.5016423,36.162839
+389,Randy Childress,US Natural Resources Conservation Service,NA,"Little Rock, AR",-92.2895948,34.7464809
+390,Rick Williams,US Natural Resources Conservation Service,NA,"Alexandria, LA",-92.4451371,31.3112936
+391,Robert Capezza,US Natural Resources Conservation Service,NA,"Alexandria, LA",-92.4451371,31.3112936
+392,Robin Mayberry,US Natural Resources Conservation Service,NA,"Nashville, TN",-86.7816016,36.1626638
+393,Tim Landreneau,US Natural Resources Conservation Service,NA,"Alexandria, LA",-92.4451371,31.3112936
+394,Adam Terando,USGS CASC,NA,"Raleigh, NC",-78.6381787,35.7795897
+395,Ivan Green,USGS CASC,NA,"Raleigh, NC",-78.6381787,35.7795897
+396,Ryan Boyles,USGS CASC,NA,"Raleigh, NC",-78.6381787,35.7795897
+397,Clint Moore,USGS Coop Unit,NA,"Athens, GA",-83.357567,33.9519347
+398,Conor McGowan,USGS Coop Unit,NA,"Gainesville, FL",-82.3248262,29.6516344
+399,Jaime Collazo,USGS Coop Unit,NA,"Raleigh, NC",-78.6381787,35.7795897
+400,Tom Kwak,USGS Coop Unit,NA,"Raleigh, NC",-78.6381787,35.7795897
+401,Jim Lyons,USGS Patuxent WLRC,NA,"Laurel, MD",-76.8483061,39.0992752
+402,Tom Doyle,USGS Wetland & Aquatic Research Center,NA,"LaFayette, LA",-92.0198427,30.2240897
+403,Renata Plantenberg,UVI,NA,"St. Thomas, USVI",-64.8940946,18.3380965
+404,Christine Ellis,Winyah Rivers Association,NA,"Conway, SC",-79.0478143,33.8360034

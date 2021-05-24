@@ -37,11 +37,8 @@ el1 <-read.csv("SAMB_cohort_network.csv")[,-1]
 sambstaff<-read.csv("SAMB location_expertise.csv", header=TRUE)
 
 el1_leave<-read.csv("SAMB_cohort_network_leavers.csv")[,-1] #this is the samb staff edgelist minus the connections associated with retirees and leavers:
-#Wylie Carr
-#Brent Murry
-#John Tirpak
-#Dawn James
-#Rachel Kirpes
-#Tom Edwards
 
 sambstaff_leave<-read.csv("SAMB location_expertise_leavers.csv", header=TRUE)#staff list minus the leavers
+
+
+standardized_ids <- read_csv("standardized_ids.csv")

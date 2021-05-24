@@ -1,0 +1,914 @@
+---
+title: "SAMB Network"
+author: "Patrick Bixler"
+date: "12/10/2019"
+output: html_document
+---
+
+```{r include=FALSE}
+source("utils1.R")
+
+```
+
+```{r Clean SAMB Staff Network Data, include=FALSE}
+
+#edgelist 
+el1<-el1
+e1<-as.matrix(el1)
+e1[,1]=as.character(e1[,1])
+e1[,2]=as.character(e1[,2])
+e1[,3]=as.character(e1[,3])
+e1[,4]=as.character(e1[,4])
+e1[,5]=as.character(e1[,5])
+e1[,6]=as.character(e1[,6])
+e1[,7]=as.character(e1[,7])
+e1[,8]=as.character(e1[,8])
+e1[,9]=as.character(e1[,9])
+
+g1<-graph_from_data_frame(d=el1,directed=TRUE) 
+#Some stats like communities and clusters need undirected graphs. Mode = collapse creates an undirected link between any pair of connected nodes. Weight should be "the nature of the tie"==communicate (1); coordinate (2), collaborate (3) but have not coded this yet. 
+#g1_un<-as.undirected(g1, mode= "collapse",edge.attr.comb=list(weight="sum", "ignore"))
+
+
+#Create a nodelist for excel use 
+gvis<-toVisNetworkData(g1)
+nodelist<-gvis$nodes
+nodelist<-nodelist[,1]
+nodelist<-as.data.frame(nodelist)
+names(nodelist)<-c("name")
+
+attr_nodelist<-merge(nodelist,sambstaff,by.x = "name",all.x = TRUE)
+write.csv(attr_nodelist,file = "Nodelist.csv")
+
+# Pull the node list with attributes
+input_attributes<-attr_nodelist
+
+#Define Attributes
+for (i in 1:vcount(g1))
+{
+V(g1)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$city<-input_attributes$city[which(input_attributes$name==V(g1)[i]$name)]
+}
+
+#new dataframe and igraph object with only "communicate" strength of ties
+el1$Strength[is.na(el1$Strength)] <- "Communicate" #convert "NA" for strength to communicate
+el1_communicate<-el1[which(el1$Strength=="Communicate"),]
+g1_communicate<-graph_from_data_frame(d=el1_communicate,directed=TRUE) 
+e1_communicate<-as.matrix(el1_communicate)
+
+#new dataframe and igraph object with only "coordinate" strength of ties
+el1_coordinate<-el1[which(el1$Strength=="Coordinate"),]
+g1_coordinate<-graph_from_data_frame(d=el1_coordinate,directed=TRUE) 
+e1_coordinate<-as.matrix(el1_coordinate)
+
+#new dataframe and igraph object with only "collaboration" strength of ties
+el1_collaboration<-el1[which(el1$Strength=="Collaborate"),]
+g1_collaboration<-graph_from_data_frame(d=el1_collaboration,directed=TRUE) 
+e1_collaboration<-as.matrix(el1_collaboration)
+
+#new dataframe of landscape connections
+el1_landscape<-el1[which(el1$Landscape=="1"),]
+e1_landscape<-as.matrix(el1_landscape)
+
+#Landscape are directed
+#removed a [,-1] from SDF code after d=e1_landscape
+g1_landscape<-graph_from_data_frame(d=e1_landscape,directed=TRUE) 
+plot(g1_landscape)
+
+#Make new edgelist of science application connections
+el1_science<-el1[which(el1$Science=="1"),]
+e1_science<-as.matrix(el1_science)
+#Science is directed
+g1_science<-graph_from_data_frame(d=e1_science,directed=TRUE) 
+
+plot(g1_science)
+
+#Make new edgelist of permitting connections
+el1_permit<-el1[which(el1$Permitting=="1"),]
+e1_permit<-as.matrix(el1_permit)
+#Permitting is directed
+g1_permit<-graph_from_data_frame(d=e1_permit,directed=TRUE) 
+plot(g1_permit)
+
+# Define networks based on edge type
+#Budget and Administration Network
+el1_BA<-el1[which(el1$B.A=="1"),]
+e1_BA<-as.matrix(el1_BA)
+
+#Budget and Administration graph object
+g1_BA<-graph_from_data_frame(d=e1_BA,directed=TRUE) 
+
+#make as undirected. Not doing this at the moment for the subnetworks
+#g1.2_BA<-as.undirected(g1_BA, mode= "collapse")
+adj1BA<-as_adjacency_matrix(g1_BA)
+m_1BA<-as.matrix(adj1BA)
+
+
+```
+
+$~$
+
+## Ego-centric Network Measures
+```{r centrality for SAMB staff network, echo=FALSE, warning=FALSE}
+#Degree in 
+
+inDegree1<-igraph::degree(g1,mode="in")
+outDegree1<-igraph::degree(g1,mode="out")
+TotalDegree1<-as.data.frame(igraph::degree(g1))
+betweenness1<-igraph::betweenness(g1, v = V(g1), directed = TRUE, weights = NULL,
+  nobigint = TRUE, normalized = TRUE)
+inCloseness1<-igraph::closeness(g1, vids = V(g1), mode = c("in"),normalized = TRUE)
+outCloseness1<-igraph::closeness(g1, vids = V(g1), mode = c("out"),normalized = TRUE)
+#eigen<-evcent(m1,g=1,gmode = "digraph",rescale=TRUE, ignore.eval=TRUE)
+#removed eigen from this DF_Centrality
+DF_Centrality1<-as.data.frame(cbind(rownames(TotalDegree1),inDegree1,outDegree1,TotalDegree1,betweenness1,inCloseness1,outCloseness1))
+rownames(DF_Centrality1)<-NULL
+DF_Centrality1<-as.data.frame(DF_Centrality1)
+colnames(DF_Centrality1)[1]<-"name"
+colnames(DF_Centrality1)[4]<-"TotalDegree"
+
+
+par(mfcol = c(4,3)) 
+hist(inDegree1)
+hist(outDegree1)
+hist(TotalDegree1)
+hist(betweenness1)
+hist(inCloseness1)
+hist(outCloseness1)
+
+dd.g1<-degree.distribution(g1)
+d<-1:max(TotalDegree1)-1
+ind<-(dd.g1 != 0)
+plot(d[ind],dd.g1[ind],log="xy",col="blue",xlab=c("Log-degree"),ylab=c("Log-Intensity"),
+     main="Log-Log Degree Distribution")
+
+sambstaffcentrality<-merge(DF_Centrality1, attr_nodelist, by = "name")
+write.csv(sambstaffcentrality,file = "SAMB Staff Centrality.csv")
+
+# Pull the node list with attributes
+input_attributes<-sambstaffcentrality
+
+#standardize centrality scores
+#Standardize node centralities using scale function where mean = 0 and standard deviation =1
+DF_Centrality1Rank<-sapply(DF_Centrality1[-1], percent_rank)
+colnames(DF_Centrality1Rank)[1]<-"Indegree Normalized"
+colnames(DF_Centrality1Rank)[2]<-"Outdegree Normalized"
+colnames(DF_Centrality1Rank)[3]<-"Total Degree Normalized"
+colnames(DF_Centrality1Rank)[4]<-"Betweenness Normalized"
+colnames(DF_Centrality1Rank)[5]<-"InCloseness Normalized"
+colnames(DF_Centrality1Rank)[6]<-"OutCloseness Normalized"
+
+DF_Centrality1<-cbind(DF_Centrality1, DF_Centrality1Rank)
+
+sambstaffcentrality<-merge(DF_Centrality1, attr_nodelist, by = "name")
+write.csv(sambstaffcentrality,file = "SAMB Staff Centrality.csv")
+
+#Whole Network Statistics
+Density1<-igraph::edge_density(g1, loops=FALSE)
+Transitivity1<-igraph::transitivity(g1)
+Centralize1<-igraph::centr_degree(g1)
+
+```
+
+#All connections geomap
+```{r echo=FALSE,warning=FALSE, data_SAMB}
+set.seed(27)
+raw <- read_csv("SAMB_cohort_network.csv",
+                col_types = cols(ID = col_skip(), `Other Explained` = col_skip()))
+
+loc <- read_csv("coordinates2.csv",
+                col_types = cols(X1 = col_skip()))
+
+#Noise was introduced so all the nodes aren't on top of each other
+loc$noiselon <- runif(404, min = -0.0900, max = 0.0900)
+loc$noiselat <- runif(404, min = -0.0900, max = 0.0900)
+loc$lon = loc$lon + loc$noiselon
+loc$lat = loc$lat + loc$noiselat
+
+df <- left_join(raw,loc, by = c("Ego" = "name"))
+df <- left_join(df, loc, by = c("Alter" = "name"))
+
+
+edges <- df 
+edges$Strength[edges$Strength == "Communicate"] <- 1
+edges$Strength[edges$Strength == "Coordinate"] <- 10
+edges$Strength[edges$Strength == "Collaborate"] <-20
+edges$Strength[is.na(edges$Strength)] <- 1
+edges$Strength <- as.numeric(edges$Strength)
+
+edges$legacy.z <- ""
+edges$legacy.z[edges$legacy.x == "SA" & edges$legacy.y == "SA"] <-"SA"
+edges$legacy.z[edges$legacy.x == "SA" & edges$legacy.y == "MB"] <-"MB-SA"
+edges$legacy.z[edges$legacy.x == "MB" & edges$legacy.y == "SA"] <-"MB-SA"
+edges$legacy.z[edges$legacy.x == "MB" & edges$legacy.y == "MB"] <-"MB"
+
+
+edges$legacy.z <- factor(
+  edges$legacy.z,
+  levels =
+    c("SA", "MB", "MB-SA"),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+SAMB_Staff_Centrality <-
+  read_csv("SAMB Staff Centrality.csv",
+    col_types = cols(
+      X1 = col_skip(),
+      admin = col_skip(),
+      city = col_skip(),
+      conservation_delivery = col_skip(),
+      conservation_planning = col_skip(),
+      email = col_skip(),
+      inDegree1 = col_skip(),
+      outDegree1 = col_skip(),
+      program = col_skip(),
+      regulatory_policy = col_skip(),
+      relationships = col_skip(),
+      research = col_skip(),
+      state = col_skip(),
+      teamlead = col_skip(),
+      technical_species_habitats = col_skip(),
+      title = col_skip()
+    )
+  )
+
+nodes <- left_join(SAMB_Staff_Centrality, loc, by = "name")
+
+nodes <- nodes %>%  mutate(rank_betweenness = dense_rank(desc(betweenness1)), rank_degree = dense_rank(desc(TotalDegree)))
+
+nodes$legacy.x <- factor(
+  nodes$legacy.x,
+  levels =
+    c("SA", "MB"),
+  exclude = NULL,
+  ordered = TRUE
+)
+
+# map projection
+geo <- list(
+  scope = 'north america',
+  projection = list(type = 'azimuthal equal area'),
+  showland = TRUE,
+  landcolor = toRGB("grey83"),
+  countrycolor = toRGB("white"),
+  subunitcolor = toRGB("white"),
+  showlakes = TRUE,
+  lakecolor = toRGB("white"),
+  showsubunits = TRUE,
+  showcountries = TRUE,
+  resolution = 50
+)
+
+t <- list(
+  family = "sans serif",
+  size = 20,
+  color = 'black')
+
+cols <- c("red", "green", "#343477")
+
+#Nodes
+fig <- plot_geo(locationmode = 'USA-states')
+
+#Edges
+fig <- fig %>% add_segments(
+  data = edges,
+  x = ~ lon.x,
+  xend = ~ lon.y,
+  y = ~ lat.x,
+  yend = ~ lat.y,
+  alpha = 0.6,
+  size = ~ Strength,
+  hoverinfo = "none",
+  color = ~ legacy.z,
+  colors = cols
+)
+
+fig <- fig %>% add_markers(
+  data = nodes,
+  x = ~ lon,
+  y = ~ lat,
+  text = ~ paste0(
+    name,
+    "<br>",
+    "Connections: ",
+    TotalDegree,
+    "\nConnection Rank: ",
+    rank_degree,
+    "<br>",
+    "City: ",
+    address,
+    "\nBetweenness: ",
+    betweenness1,
+    "\nBetweenness Rank: ",
+    rank_betweenness
+  ),
+  size = ~ TotalDegree ** 2,
+  hoverinfo = "text",
+  alpha = 0.8,
+  color = ~ legacy.x,
+  colors = cols
+)
+
+```
+
+
+## Network Graphs
+
+
+#All relationships for SAMB Staff
+```{r echo=FALSE}
+
+#Not using color code by state
+#lnodes <- data.frame(label = c("AL","AR", "FL","GA","LA","MO","MS", "NC", "TN", "TX", "PR"),
+#color.background = c("white","white","white","white","white","white","white","white","white","white", "white"),
+#color.border = c("green", "darkred","orange", "red", "yellow","gold","gray","purple","darkgreen","darkorange", "darkblue"),
+#shape=c("circle","circle","circle","circle","circle","circle","circle","circle","circle","circle", "circle"))
+
+#V(g1)[V(g1)$state=="AL"]$color <- "green"
+#V(g1)[V(g1)$state=="AR"]$color <- "darkred"
+#V(g1)[V(g1)$state=="FL"]$color <- "orange"
+#V(g1)[V(g1)$state=="GA"]$color <- "red"
+#V(g1)[V(g1)$state=="LA"]$color <- "yellow"
+#V(g1)[V(g1)$state=="MO"]$color <- "gold"
+#V(g1)[V(g1)$state=="MS"]$color <- "gray"
+#V(g1)[V(g1)$state=="NC"]$color <- "purple"
+#V(g1)[V(g1)$state=="TN"]$color <- "darkgreen"
+#V(g1)[V(g1)$state=="TX"]$color <- "darkorange"
+#V(g1)[V(g1)$state=="PR"]$color <- "darkblue"
+
+#define edge attributes
+E(g1)$Strength[E(g1)$Strength == "Communicate"] <- 1
+E(g1)$Strength[E(g1)$Strength == "Coordinate"] <- 2
+E(g1)$Strength[E(g1)$Strength == "Collaborate"] <-3
+E(g1)$Strength[is.na(E(g1)$Strength)] <- 1
+E(g1)$Strength <- as.numeric(E(g1)$Strength)
+
+#trying to set line type to show differences in weight
+#this won't translate to VisNetowrk graphs
+E(g1)[E(g1)$Strength == 3]$lty<-"solid"
+E(g1)[E(g1)$Strength == 2]$lty<-"dashed"
+E(g1)[E(g1)$Strength == 1]$lty<-"dotted"
+
+#Define Node Attributes
+
+
+for (i in 1:vcount(g1))
+{
+V(g1)[i]$program<-input_attributes$program[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$size<-input_attributes$inDegree1[which(input_attributes$name==V(g1)[i]$name)]
+}
+
+V(g1)$size<-V(g1)$size*2
+
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1)[V(g1)$legacy=="MB"]$color <- "green"
+V(g1)[V(g1)$legacy=="SA"]$color <- "red"
+
+gvis<-toVisNetworkData(g1)
+nodelist<-gvis$nodes
+
+nodes <- sort(gvis$nodes)
+edges <- gvis$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+
+visNetwork(nodes,edges,main="All Connections with SA-MB Staff",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Network with only communication ties
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_communicate))
+{
+V(g1_communicate)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_communicate)[i]$name)]
+V(g1_communicate)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1_communicate)[i]$name)]
+V(g1_communicate)[i]$size<-input_attributes$inDegree1[which(input_attributes$name==V(g1_communicate)[i]$name)]
+}
+
+V(g1_communicate)$size<-V(g1_communicate)$size*2
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1_communicate)[V(g1_communicate)$legacy=="MB"]$color <- "green"
+V(g1_communicate)[V(g1_communicate)$legacy=="SA"]$color <- "red"
+
+
+gvis_communicate<-toVisNetworkData(g1_communicate)
+nodelist_communicate<-gvis_communicate$nodes
+
+nodes <- sort(gvis_communicate$nodes)
+edges <- gvis_communicate$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+
+visNetwork(nodes,edges,main="SAMB Communication Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+```{r coordinate network, echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_coordinate))
+{
+V(g1_coordinate)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_coordinate)[i]$name)]
+V(g1_coordinate)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1_coordinate)[i]$name)]
+V(g1_coordinate)[i]$size<-input_attributes$inDegree1[which(input_attributes$name==V(g1_coordinate)[i]$name)]
+}
+
+V(g1_coordinate)$size<-V(g1_coordinate)$size*2
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1_coordinate)[V(g1_coordinate)$legacy=="MB"]$color <- "green"
+V(g1_coordinate)[V(g1_coordinate)$legacy=="SA"]$color <- "red"
+
+
+gvis_coordinate<-toVisNetworkData(g1_coordinate)
+nodelist_coordinate<-gvis_coordinate$nodes
+
+
+nodes <- sort(gvis_coordinate$nodes)
+edges <- gvis_coordinate$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="SAMB Coordination Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#Network with only collaboration ties
+```{r collaboration network, echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_collaboration))
+{
+V(g1_collaboration)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_collaboration)[i]$name)]
+V(g1_collaboration)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1_collaboration)[i]$name)]
+V(g1_collaboration)[i]$size<-input_attributes$inDegree1[which(input_attributes$name==V(g1_collaboration)[i]$name)]
+}
+
+V(g1_collaboration)$size<-V(g1_collaboration)$size*2
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1_collaboration)[V(g1_collaboration)$legacy=="MB"]$color <- "green"
+V(g1_collaboration)[V(g1_collaboration)$legacy=="SA"]$color <- "red"
+
+
+gvis_collaboration<-toVisNetworkData(g1_collaboration)
+nodelist_collaboration<-gvis_collaboration$nodes
+
+nodes <- sort(gvis_collaboration$nodes)
+edges <- gvis_collaboration$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="SAMB Collaboration Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes, useGroups = FALSE,stepY=100)
+```
+#Map Geo Map
+```{r echo=FALSE, warning=FALSE}
+fig <- fig %>% layout(title = 'SAMB Staff Network',
+                      font=t,
+                      geo = geo,
+                      showlegend = TRUE)
+library(htmlwidgets)
+saveWidget(fig, "SAMB_geonetwork.html", selfcontained = T, libdir = "lib")
+fig
+```
+
+#Landscape Conservation
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_landscape))
+{
+V(g1_landscape)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_landscape)[i]$name)]
+V(g1_landscape)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1_landscape)[i]$name)]
+V(g1_landscape)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_landscape)[i]$name)]
+V(g1_landscape)[i]$city<-input_attributes$city[which(input_attributes$name==V(g1_landscape)[i]$name)]
+}
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1_landscape)[V(g1_landscape)$legacy=="MB"]$color <- "green"
+V(g1_landscape)[V(g1_landscape)$legacy=="SA"]$color <- "red"
+
+#define edge attributes
+E(g1_landscape)$Strength[E(g1_landscape)$Strength == "Communicate"] <- 1
+E(g1_landscape)$Strength[E(g1_landscape)$Strength == "Coordinate"] <- 2
+E(g1_landscape)$Strength[E(g1_landscape)$Strength == "Collaborate"] <-3
+E(g1_landscape)$Strength[is.na(E(g1_landscape)$Strength)] <- 1
+E(g1_landscape)$Strength <- as.numeric(E(g1_landscape)$Strength)
+
+
+#set visNetwork attributes
+gvis_landscape<-toVisNetworkData(g1_landscape)
+nodelist_landscape<-gvis_landscape$nodes
+gvis_landscape$edges$value<-gvis_landscape$edges$Strength #weights edges by strength of tie
+gvis_landscape$edges$value <-as.numeric(gvis_landscape$edges$value)
+gvis_landscape$edges$value <- gvis_landscape$edges$value/10+1
+gvis_landscape$edges$color <- NULL
+
+nodes <- sort(gvis_landscape$nodes)
+edges <- gvis_landscape$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Landscape Conservation Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#Science Support
+```{r science support, echo=FALSE}
+
+#define edge attributes
+E(g1_science)$Strength[E(g1_science)$Strength == "Communicate"] <- 1
+E(g1_science)$Strength[E(g1_science)$Strength == "Coordinate"] <- 2
+E(g1_science)$Strength[E(g1_science)$Strength == "Collaborate"] <-3
+E(g1_science)$Strength[is.na(E(g1_science)$Strength)] <- 1
+E(g1_science)$Strength <- as.numeric(E(g1_science)$Strength)
+
+#Define Node Attributes
+for (i in 1:vcount(g1_science))
+{
+V(g1_science)[i]$program<-input_attributes$program[which(input_attributes$name==V(g1_science)[i]$name)]
+V(g1_science)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1_science)[i]$name)]
+V(g1_science)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_science)[i]$name)]
+V(g1_science)[i]$city<-input_attributes$city[which(input_attributes$name==V(g1_science)[i]$name)]
+}
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1_science)[V(g1_science)$legacy=="MB"]$color <- "green"
+V(g1_science)[V(g1_science)$legacy=="SA"]$color <- "red"
+
+gvis_science<-toVisNetworkData(g1_science)
+nodelist_science<-gvis_science$nodes
+gvis_science$edges$value<-gvis_science$edges$Strength #weights edges by strength of tie
+gvis_science$edges$value <-as.numeric(gvis_science$edges$value)
+gvis_science$edges$value <- gvis_science$edges$value/10+1
+gvis_science$edges$color <- NULL
+
+
+nodes <- sort(gvis_science$nodes)
+edges <- gvis_science$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Science Support Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+
+#Permitting
+```{r echo=FALSE}
+#define edge attributes
+E(g1_permit)$Strength[E(g1_permit)$Strength == "Communicate"] <- 1
+E(g1_permit)$Strength[E(g1_permit)$Strength == "Coordinate"] <- 2
+E(g1_permit)$Strength[E(g1_permit)$Strength == "Collaborate"] <-3
+E(g1_permit)$Strength[is.na(E(g1_permit)$Strength)] <- 1
+E(g1_permit)$Strength <- as.numeric(E(g1_permit)$Strength)
+
+#Define Attributes
+for (i in 1:vcount(g1_permit))
+{
+V(g1_permit)[i]$program<-input_attributes$program[which(input_attributes$name==V(g1_permit)[i]$name)]
+V(g1_permit)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1_permit)[i]$name)]
+V(g1_permit)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_permit)[i]$name)]
+V(g1_permit)[i]$city<-input_attributes$city[which(input_attributes$name==V(g1_permit)[i]$name)]
+}
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1_permit)[V(g1_permit)$legacy=="MB"]$color <- "green"
+V(g1_permit)[V(g1_permit)$legacy=="SA"]$color <- "red"
+
+gvis_permit<-toVisNetworkData(g1_permit)
+nodelist_permit<-gvis_permit$nodes
+gvis_permit$edges$value<-gvis_permit$edges$Strength #weights edges by strength of tie
+gvis_permit$edges$value <-as.numeric(gvis_permit$edges$value)
+gvis_permit$edges$value <- gvis_permit$edges$value/10+1
+gvis_permit$edges$color <- NULL
+
+nodes <- sort(gvis_permit$nodes)
+edges <- gvis_permit$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Permittting Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+#Budgeting and Administration
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_BA))
+{
+V(g1_BA)[i]$program<-input_attributes$program[which(input_attributes$name==V(g1_BA)[i]$name)]
+V(g1_BA)[i]$legacy<-input_attributes$legacy[which(input_attributes$name==V(g1_BA)[i]$name)]
+V(g1_BA)[i]$state<-input_attributes$state[which(input_attributes$name==V(g1_BA)[i]$name)]
+V(g1_BA)[i]$city<-input_attributes$city[which(input_attributes$name==V(g1_BA)[i]$name)]
+}
+
+lnodes <- data.frame(label = c("SA","MB"),
+color.background = c("red", "green"),
+color.border = c("red", "green"),
+shape=c("dot", "dot"))
+
+V(g1_BA)[V(g1_BA)$legacy=="MB"]$color <- "green"
+V(g1_BA)[V(g1_BA)$legacy=="SA"]$color <- "red"
+
+#define edge attributes
+E(g1_BA)$Strength[E(g1_BA)$Strength == "Communicate"] <- 1
+E(g1_BA)$Strength[E(g1_BA)$Strength == "Coordinate"] <- 2
+E(g1_BA)$Strength[E(g1_BA)$Strength == "Collaborate"] <-3
+E(g1_BA)$Strength[is.na(E(g1_BA)$Strength)] <- 1
+E(g1_BA)$Strength <- as.numeric(E(g1_BA)$Strength)
+
+
+#set visNetwork attributes
+gvis_BA<-toVisNetworkData(g1_BA)
+nodelist_BA<-gvis_BA$nodes
+gvis_BA$edges$value<-gvis_BA$edges$Strength #weights edges by strength of tie
+gvis_BA$edges$value <-as.numeric(gvis_BA$edges$value)
+gvis_BA$edges$value <- gvis_BA$edges$value/10+1
+gvis_BA$edges$color <- NULL
+
+nodes <- sort(gvis_BA$nodes)
+edges <- gvis_BA$edges
+
+#anonymizing
+nodes <-
+  nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
+  rename("actual_name" = "id", "id" = "id.y") %>% 
+  select("id", everything()) 
+nodes$label <- nodes$id
+
+edges <-
+  edges %>% left_join(standardized_ids, by = c("from" = "all_names")) %>%
+  left_join(standardized_ids, by = c("to" = "all_names")) %>% 
+  rename("from_label" = "from", "to_label" = "to") %>% 
+  rename("from" = "id.x", "to" = "id.y") %>% 
+  select("from", "to", everything())
+
+visNetwork(nodes,edges,main="Budgeting and Administration Connections",width = "100%",height = "850px") %>%
+  visLayout(randomSeed = 123) %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr") %>%
+  visLayout(randomSeed = 123,improvedLayout = TRUE)%>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("state"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addNodes = lnodes,useGroups = FALSE,stepY=100)
+```
+
+``` {r network summary, include = TRUE, echo=FALSE, warning=FALSE}
+E(g1)
+table(E(g1)$Strength)
+V(g1)
+table(V(g1)$program)
+
+E(g1_landscape)
+table(E(g1_landscape)$Strength)
+V(g1_landscape)
+table(V(g1_landscape)$program)
+
+E(g1_science)
+table(E(g1_science)$Strength)
+V(g1_science)
+table(V(g1_science)$program)
+
+E(g1_permit)
+table(E(g1_permit)$Strength)
+V(g1_permit)
+table(V(g1_permit)$program)
+
+E(g1_BA)
+table(E(g1_BA)$Strength)
+V(g1_BA)
+table(V(g1_BA)$program)
+
+Density1<-igraph::edge_density(g1, loops=FALSE)
+Transitivity1<-igraph::transitivity(g1)
+Centralize1<-igraph::centr_degree(g1)
+
+Density1_landscape<-igraph::edge_density(g1_landscape, loops=FALSE)
+Density1_science<-igraph::edge_density(g1_science, loops=FALSE)
+Density1_permit<-igraph::edge_density(g1_permit, loops=FALSE)
+Density1_BA<-igraph::edge_density(g1_BA, loops=FALSE)
+Transitivity1_landscape<-igraph::transitivity(g1_landscape)
+Transitivity1_science<-igraph::transitivity(g1_science)
+Transitivity1_permit<-igraph::transitivity(g1_permit)
+Transitivity1_BA<-igraph::transitivity(g1_BA)
+Centralize1_landscape<-igraph::centr_degree(g1_landscape)
+Centralize1_science<-igraph::centr_degree(g1_science)
+Centralize1_permit<-igraph::centr_degree(g1_permit)
+Centralize1_BA<-igraph::centr_degree(g1_BA)
+
+DF_Layer_1_Network.Statistics<-as.data.frame(cbind(Density1, Density1_landscape, Density1_science, Density1_permit, Density1_BA, Transitivity1, Transitivity1_landscape, Transitivity1_science, Transitivity1_permit, Transitivity1_BA, Centralize1$centralization, Centralize1_landscape$centralization, Centralize1_science$centralization, Centralize1_permit$centralization, Centralize1_BA$centralization))
+colnames(DF_Layer_1_Network.Statistics)[11]<-"Centralization1"
+colnames(DF_Layer_1_Network.Statistics)[12]<-"Centralization1_landscape"
+colnames(DF_Layer_1_Network.Statistics)[13]<-"Centralization1_science"
+colnames(DF_Layer_1_Network.Statistics)[14]<-"Centralization1_permit"
+colnames(DF_Layer_1_Network.Statistics)[15]<-"Centralization1_BA"
+
+print(DF_Layer_1_Network.Statistics)
+```
