@@ -37,3 +37,5 @@ library(plotly)
 
 el2<-read.csv("USFWS_network_in region.csv")[,-1]
 samb_usfws_3<-read.csv("SAMB location_expertise3.csv", header=TRUE)
+
+standardized_ids <- read_csv("standardized_ids.csv")

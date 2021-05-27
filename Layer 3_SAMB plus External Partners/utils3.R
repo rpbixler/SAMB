@@ -39,3 +39,5 @@ el3<-read.csv("external_network_clean.csv")
 el4<-read.csv("external_network_orgs.csv")
 samb_partners<-read.csv("SAMB location_expertise_plus ext partners.csv", header=TRUE)
 samb_partners2<-read.csv("SAMB location_expertise_plus ext partners2.csv", header=TRUE)
+
+standardized_ids <- read_csv("standardized_ids.csv")
