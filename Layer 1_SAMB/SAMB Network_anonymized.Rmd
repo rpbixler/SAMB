@@ -374,10 +374,10 @@ V(g1)[V(g1)$legacy=="SA"]$color <- "red"
 gvis<-toVisNetworkData(g1)
 nodelist<-gvis$nodes
 
+#anonymizing
 nodes <- sort(gvis$nodes)
 edges <- gvis$edges
 
-#anonymizing
 nodes <-
   nodes %>% left_join(standardized_ids, by = c("id" = "all_names")) %>%
   rename("actual_name" = "id", "id" = "id.y") %>% 
